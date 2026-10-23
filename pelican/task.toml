@@ -1,0 +1,30 @@
+schema_version = "1.4"
+# Everything the agent leaves in /app goes to the verifier and into the trial record.
+artifacts = ["/app"]
+
+[metadata]
+name = "pelican"
+description = "One HTML file with an SVG 2D animation of a pelican riding a bicycle."
+
+[environment]
+# Public while the harness installs; the agent phase below is cut down to its model host.
+network_mode = "public"
+cpus = 2
+memory_mb = 4096
+build_timeout_sec = 900.0
+
+[agent]
+timeout_sec = 1800.0
+network_mode = "allowlist"
+allowed_hosts = []
+
+[verifier]
+# Its own container, built from tests/Dockerfile, rendering offline.
+environment_mode = "separate"
+timeout_sec = 300.0
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "public"
+cpus = 2
+memory_mb = 2048

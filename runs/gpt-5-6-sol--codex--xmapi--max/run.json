@@ -1,0 +1,26 @@
+{
+  "route": {
+    "model": "gpt-5.6-sol",
+    "harness": "codex",
+    "provider": "xmapi",
+    "effort": "max"
+  },
+  "attempt": 1,
+  "archive": "gpt-5-6-sol-max-xmapi-codex-01",
+  "verdict": {
+    "file": "pelican.html",
+    "bytes": 14044,
+    "drawn": true,
+    "moving": true,
+    "svgs": 1,
+    "shapes": 126,
+    "motion": [
+      0.1877,
+      0.0643,
+      0.0825
+    ],
+    "errors": 0,
+    "blocked_requests": 0,
+    "render_error": null
+  }
+}

@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Velodrome · a pelican riding a bicycle</title>
+<meta name="description" content="One prompt, a pelican riding a bicycle, drawn by many models, effort settings, coding agents and providers.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+<script>
+  // Follow the theme chosen on zedongpeng.com, else the system.
+  (() => {
+    const t = localStorage.getItem("theme");
+    if (t === "dark" || t === "light") document.documentElement.dataset.theme = t;
+  })();
+</script>
+</head>
+<body>
+<header class="top">
+  <a class="mark" href="./" aria-label="Velodrome home">
+    <svg viewBox="0 0 56 32" aria-hidden="true"><rect x="2" y="2" width="52" height="28" rx="14" class="edge"/><rect x="8" y="8" width="40" height="16" rx="8" class="sprint"/><rect x="13" y="13" width="30" height="6" rx="3" class="stay"/></svg>
+    <span>Velodrome</span>
+  </a>
+  <nav><a href="#notes">Notes</a><a id="repo-link" href="https://github.com/zedong-peng/velodrome">GitHub</a></nav>
+</header>
+
+<main>
+  <section class="intro">
+    <h1>A pelican riding a bicycle, <span>drawn by model, effort, harness and provider.</span></h1>
+    <figure class="prompt">
+      <figcaption>Prompt</figcaption>
+      <code lang="zh"><!-- PROMPT --></code>
+      <p>No internet, don't look at other local files. Create an HTML file whose content is an SVG 2D animation of a pelican riding a bicycle.</p>
+    </figure>
+    <p class="tally" id="tally"></p>
+  </section>
+
+  <section id="board" aria-live="polite"></section>
+
+  <section id="notes" class="notes">
+    <h2>Notes</h2>
+    <div class="steps">
+      <div>
+        <h3>One attempt each</h3>
+        <p>Every picture is the file the agent wrote, unedited and unpicked. Attempts that wrote nothing stay.</p>
+      </div>
+      <div>
+        <h3>Four labels</h3>
+        <p>The model; the effort, as the harness names it; the harness, the agent program that ran the model; the provider, where the model was served from: a subscription, the official API, or a relay that resells access.</p>
+      </div>
+      <div>
+        <h3>Numbers</h3>
+        <p>Six runs were timed by a script, so only they show time, tokens and cost (tokens at list price). The rest were run by hand.</p>
+      </div>
+      <div>
+        <h3>Pictures</h3>
+        <p>Posters are frames at 2 seconds, rendered offline at 960&times;720. Hover or open a card to play the real file.</p>
+      </div>
+    </div>
+    <p class="fine">No submissions: every run is mine. New runs go through the <a id="repo-link-2" href="https://github.com/zedong-peng/velodrome">Harbor runner in the repository</a>. The pelican test is <a href="https://simonwillison.net/tags/pelican-riding-a-bicycle/">Simon Willison's</a>.</p>
+  </section>
+</main>
+
+<footer>
+  <span>Velodrome by <a href="https://zedongpeng.com/">Zedong Peng</a></span>
+</footer>
+
+<dialog id="detail" aria-labelledby="detail-title">
+  <div class="sheet">
+    <div class="stage"><div class="frame" id="detail-frame"></div></div>
+    <aside>
+      <p class="kicker" id="detail-kicker"></p>
+      <h2 id="detail-title"></h2>
+      <dl id="detail-route"></dl>
+      <dl id="detail-receipt"></dl>
+      <p class="links" id="detail-links"></p>
+    </aside>
+    <button class="close" type="button" aria-label="Close" data-close>&times;</button>
+    <button class="step prev" type="button" aria-label="Previous run" data-step="-1">&#8249;</button>
+    <button class="step next" type="button" aria-label="Next run" data-step="1">&#8250;</button>
+  </div>
+</dialog>
+
+<script id="data" type="application/json">/* DATA */</script>
+<script src="app.js"></script>
+</body>
+</html>

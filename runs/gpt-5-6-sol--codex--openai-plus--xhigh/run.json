@@ -1,0 +1,26 @@
+{
+  "route": {
+    "model": "gpt-5.6-sol",
+    "harness": "codex",
+    "provider": "openai-plus",
+    "effort": "xhigh"
+  },
+  "attempt": 1,
+  "archive": "gpt-5-6-sol-xhigh-openai-plus-codex",
+  "verdict": {
+    "file": "pelican.html",
+    "bytes": 14413,
+    "drawn": true,
+    "moving": true,
+    "svgs": 1,
+    "shapes": 138,
+    "motion": [
+      0.1233,
+      0.1603,
+      0.1477
+    ],
+    "errors": 0,
+    "blocked_requests": 0,
+    "render_error": null
+  }
+}

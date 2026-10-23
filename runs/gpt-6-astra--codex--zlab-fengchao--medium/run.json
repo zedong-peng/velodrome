@@ -1,0 +1,26 @@
+{
+  "route": {
+    "model": "gpt-6-astra",
+    "harness": "codex",
+    "provider": "zlab-fengchao",
+    "effort": "medium"
+  },
+  "attempt": 1,
+  "archive": "gpt-6-astra-medium-zlab-fengchao-api-codex",
+  "verdict": {
+    "file": "pelican.html",
+    "bytes": 10279,
+    "drawn": true,
+    "moving": true,
+    "svgs": 3,
+    "shapes": 72,
+    "motion": [
+      0.0554,
+      0.0411,
+      0.0499
+    ],
+    "errors": 0,
+    "blocked_requests": 0,
+    "render_error": null
+  }
+}

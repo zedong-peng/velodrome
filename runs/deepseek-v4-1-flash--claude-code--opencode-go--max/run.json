@@ -1,0 +1,26 @@
+{
+  "route": {
+    "model": "deepseek-v4.1-flash",
+    "harness": "claude-code",
+    "provider": "opencode-go",
+    "effort": "max"
+  },
+  "attempt": 1,
+  "archive": "deepseek-v4-1-flash-max-opencode-go-claude-code",
+  "verdict": {
+    "file": "pelican.html",
+    "bytes": 21289,
+    "drawn": true,
+    "moving": true,
+    "svgs": 1,
+    "shapes": 184,
+    "motion": [
+      0.0988,
+      0.1265,
+      0.1076
+    ],
+    "errors": 0,
+    "blocked_requests": 0,
+    "render_error": null
+  }
+}

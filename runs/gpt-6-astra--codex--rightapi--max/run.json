@@ -1,0 +1,26 @@
+{
+  "route": {
+    "model": "gpt-6-astra",
+    "harness": "codex",
+    "provider": "rightapi",
+    "effort": "max"
+  },
+  "attempt": 1,
+  "archive": "gpt-6-astra-max-rightapi-codex",
+  "verdict": {
+    "file": "pelican.html",
+    "bytes": 13352,
+    "drawn": true,
+    "moving": true,
+    "svgs": 1,
+    "shapes": 120,
+    "motion": [
+      0.0287,
+      0.0478,
+      0.0344
+    ],
+    "errors": 0,
+    "blocked_requests": 0,
+    "render_error": null
+  }
+}

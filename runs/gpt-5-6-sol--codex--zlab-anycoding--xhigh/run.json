@@ -1,0 +1,26 @@
+{
+  "route": {
+    "model": "gpt-5.6-sol",
+    "harness": "codex",
+    "provider": "zlab-anycoding",
+    "effort": "xhigh"
+  },
+  "attempt": 1,
+  "archive": "gpt-5-6-sol-xhigh-zlab-anycoding-codex-01",
+  "verdict": {
+    "file": "pelican.html",
+    "bytes": 10117,
+    "drawn": true,
+    "moving": true,
+    "svgs": 1,
+    "shapes": 79,
+    "motion": [
+      0.0771,
+      0.0465,
+      0.0504
+    ],
+    "errors": 0,
+    "blocked_requests": 0,
+    "render_error": null
+  }
+}

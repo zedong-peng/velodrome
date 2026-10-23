@@ -1,0 +1,26 @@
+{
+  "route": {
+    "model": "deepseek-v4.1-flash",
+    "harness": "codex",
+    "provider": "opencode-go",
+    "effort": "max"
+  },
+  "attempt": 1,
+  "archive": "deepseek-v4-1-flash-max-opencode-go-codex",
+  "verdict": {
+    "file": "pelican.html",
+    "bytes": 22463,
+    "drawn": true,
+    "moving": true,
+    "svgs": 1,
+    "shapes": 170,
+    "motion": [
+      0.0719,
+      0.0878,
+      0.095
+    ],
+    "errors": 0,
+    "blocked_requests": 0,
+    "render_error": null
+  }
+}

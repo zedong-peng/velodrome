@@ -1,0 +1,281 @@
+# Who is who. The site lists models, harnesses and providers in this order.
+#
+# Providers with base URLs can be used by velodrome.py; the rest only appear in
+# past runs. Keys never go here: they live in keys.env (gitignored) as
+# VELODROME_KEY_<PROVIDER>, or VELODROME_KEY_<PROVIDER>_<API> when a provider
+# issues one key per API format.
+# API formats: anthropic (Messages), chat (Chat Completions), responses
+# (OpenAI Responses), google (Gemini).
+
+# ---------------------------------------------------------------- providers
+
+[providers.claude-max]
+name = "Claude Max"
+kind = "subscription"
+anthropic = "https://api.anthropic.com"
+# A subscription login, not an API key, used only from Anthropic's own harness.
+login = "claude-oauth"
+harnesses = ["claude-code"]
+
+[providers.openai-plus]
+name = "ChatGPT Plus"
+kind = "subscription"
+harnesses = ["codex"]
+
+[providers.opencode-go]
+name = "OpenCode Go"
+kind = "subscription"
+anthropic = "https://opencode.ai/inference/go/anthropic"
+openai = "https://opencode.ai/inference/go/openai/v1"
+google = "https://opencode.ai/inference/go/google"
+# Go serves each model in one format: chat unless listed.
+default_api = "chat"
+[providers.opencode-go.apis]
+"claude-haiku-5-5" = "anthropic"
+"minimax-m3" = "anthropic"
+"qwen3.8-max" = "anthropic"
+"gpt-6-luna" = "responses"
+"gpt-5.6-luna" = "responses"
+"grok-4.7" = "responses"
+"muse-spark-1.3-contributor" = "responses"
+"gemini-4-argon-contributor" = "google"
+
+[providers.cursor]
+name = "Cursor"
+kind = "subscription"
+harnesses = ["cursor"]
+
+[providers.deepseek-api]
+name = "DeepSeek API"
+kind = "official"
+anthropic = "https://api.deepseek.com/anthropic"
+openai = "https://api.deepseek.com/v1"
+
+[providers.rightapi]
+name = "rightapi"
+kind = "relay"
+anthropic = "https://rightapi.ai"
+openai = "https://rightapi.ai/v1"
+
+[providers.xmapi]
+name = "xmapi"
+kind = "relay"
+
+[providers.zlab-anycoding]
+name = "zlab (anycoding)"
+kind = "relay"
+
+[providers.zlab-fengchao]
+name = "zlab (fengchao)"
+kind = "relay"
+
+[providers.4router]
+name = "4router (cheapclaude)"
+kind = "relay"
+
+[providers.zhinaoapi]
+name = "zhinaoapi"
+kind = "relay"
+openai = "https://api.zhinaoapi.ai/v1"
+
+[providers.anyrouter]
+name = "anyrouter"
+kind = "relay"
+anthropic = "https://anyrouter.top"
+openai = "https://anyrouter.top/v1"
+
+[providers.zlab]
+name = "zlab"
+kind = "relay"
+anthropic = "https://ttft.asia"
+openai = "https://ttft.asia/v1"
+
+# ---------------------------------------------------------------- harnesses
+# The key is the Harbor agent name; apis are the formats it speaks, best first.
+
+[harnesses.claude-code]
+name = "Claude Code"
+apis = ["anthropic"]
+
+[harnesses.codex]
+name = "Codex"
+apis = ["responses"]
+
+[harnesses.opencode]
+name = "OpenCode"
+apis = ["anthropic", "responses", "chat", "google"]
+
+[harnesses.pi]
+name = "Pi"
+apis = ["anthropic", "responses", "chat"]
+
+[harnesses.cursor]
+name = "Cursor"
+apis = []  # past runs only; Harbor's agent is cursor-cli and needs a Cursor login
+
+[harnesses.dsh]
+name = "dsh"
+apis = []  # past runs only
+
+[harnesses.goose]
+name = "Goose"
+apis = ["anthropic", "chat"]
+
+[harnesses.aider]
+name = "Aider"
+apis = ["anthropic", "chat"]
+
+[harnesses.qwen-coder]
+name = "Qwen Code"
+apis = ["chat"]
+
+[harnesses.kimi-cli]
+name = "Kimi CLI"
+apis = ["anthropic", "chat"]
+
+[harnesses.hermes]
+name = "Hermes"
+apis = ["chat"]
+
+[harnesses.mini-swe-agent]
+name = "mini-SWE-agent"
+apis = ["anthropic", "chat"]
+
+[harnesses.openhands]
+name = "OpenHands"
+apis = ["anthropic", "chat"]
+
+[harnesses.openclaw]
+name = "OpenClaw"
+apis = ["anthropic", "chat"]
+
+[harnesses.gemini-cli]
+name = "Gemini CLI"
+apis = ["google"]
+
+# ------------------------------------------------------------------- models
+# List prices in USD per million tokens (models.dev, 2026-10-23), so runs from
+# any route are costed on one scale.
+
+[models.claude-opus-5-5]
+name = "Claude Opus 5.5"
+lab = "Anthropic"
+price = { input = 4, output = 20, cache_read = 0.2 }
+
+[models.claude-fable-5-1]
+name = "Claude Fable 5.1"
+lab = "Anthropic"
+price = { input = 10, output = 50, cache_read = 0.25 }
+
+[models.claude-opus-5]
+name = "Claude Opus 5"
+lab = "Anthropic"
+price = { input = 5, output = 25, cache_read = 0.5 }
+
+[models.claude-sonnet-5-5]
+name = "Claude Sonnet 5.5"
+lab = "Anthropic"
+price = { input = 2, output = 10, cache_read = 0.1 }
+
+[models.claude-haiku-5-5]
+name = "Claude Haiku 5.5"
+lab = "Anthropic"
+price = { input = 0.1, output = 0.5, cache_read = 0.01 }
+
+[models.gpt-6-astra]
+name = "GPT-6 Astra"
+lab = "OpenAI"
+price = { input = 10, output = 50, cache_read = 1 }
+
+[models."gpt-6.1-sol"]
+name = "GPT-6.1 Sol"
+lab = "OpenAI"
+price = { input = 2, output = 10, cache_read = 0.1 }
+
+[models."gpt-5.6-sol"]
+name = "GPT-5.6 Sol"
+lab = "OpenAI"
+price = { input = 4, output = 20, cache_read = 0.4 }
+
+[models.gpt-6-luna]
+name = "GPT-6 Luna"
+lab = "OpenAI"
+price = { input = 0.1, output = 0.5, cache_read = 0.01 }
+
+[models."gpt-5.6-luna"]
+name = "GPT-5.6 Luna"
+lab = "OpenAI"
+price = { input = 0.2, output = 1.2 }
+
+[models.gemini-4-argon-contributor]
+name = "Gemini 4 Argon"
+lab = "Google"
+price = { input = 4, output = 20, cache_read = 0.2 }
+
+[models."grok-4.7"]
+name = "Grok 4.7"
+lab = "xAI"
+price = { input = 2, output = 6, cache_read = 0.5 }
+
+[models."grok-4.6"]
+name = "Grok 4.6"
+lab = "xAI"
+
+[models."muse-spark-1.3-contributor"]
+name = "Muse Spark 1.3"
+lab = "Meta"
+price = { input = 0.1, output = 0.2, cache_read = 0.002 }
+
+[models.kimi-k3]
+name = "Kimi K3"
+lab = "Moonshot"
+price = { input = 3, output = 15, cache_read = 0.3 }
+
+[models.deepseek-v4-pro]
+name = "DeepSeek V4 Pro"
+lab = "DeepSeek"
+price = { input = 0.66, output = 1.98, cache_read = 0.022 }
+
+[models."deepseek-v4.1-flash"]
+name = "DeepSeek V4.1 Flash"
+lab = "DeepSeek"
+price = { input = 0.15, output = 0.6, cache_read = 0.003 }
+
+[models.deepseek-flash]
+name = "DeepSeek Flash"
+lab = "DeepSeek"
+
+[models."glm-5.3"]
+name = "GLM-5.3"
+lab = "Zhipu"
+price = { input = 1.4, output = 4.4, cache_read = 0.26 }
+
+[models.minimax-m3]
+name = "MiniMax M3"
+lab = "MiniMax"
+price = { input = 0.3, output = 1.2, cache_read = 0.06 }
+
+[models."qwen3.8-max"]
+name = "Qwen3.8 Max"
+lab = "Alibaba"
+price = { input = 2, output = 6, cache_read = 0.25 }
+
+[models."mimo-v2.6-pro"]
+name = "MiMo V2.6 Pro"
+lab = "Xiaomi"
+price = { input = 0.435, output = 0.87, cache_read = 0.003625 }
+
+[models.hy4-preview]
+name = "Hunyuan 4 Preview"
+lab = "Tencent"
+price = { input = 0.834, output = 2.501, cache_read = 0.042 }
+
+[models.step-5-preview]
+name = "Step 5 Preview"
+lab = "StepFun"
+price = { input = 1, output = 2.7, cache_read = 0.1 }
+
+[models."longcat-2.0"]
+name = "LongCat 2.0"
+lab = "Meituan"
+price = { input = 0.3, output = 1.2, cache_read = 0.006 }

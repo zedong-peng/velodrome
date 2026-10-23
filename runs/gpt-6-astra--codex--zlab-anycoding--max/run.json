@@ -1,0 +1,26 @@
+{
+  "route": {
+    "model": "gpt-6-astra",
+    "harness": "codex",
+    "provider": "zlab-anycoding",
+    "effort": "max"
+  },
+  "attempt": 1,
+  "archive": "gpt-6-astra-max-zlab-anycoding-codex-01",
+  "verdict": {
+    "file": "pelican.html",
+    "bytes": 13730,
+    "drawn": true,
+    "moving": true,
+    "svgs": 3,
+    "shapes": 101,
+    "motion": [
+      0.0671,
+      0.0872,
+      0.0851
+    ],
+    "errors": 0,
+    "blocked_requests": 0,
+    "render_error": null
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "route": {
+    "model": "gpt-6-astra",
+    "harness": "codex",
+    "provider": "xmapi",
+    "effort": "max"
+  },
+  "attempt": 1,
+  "archive": "gpt-6-astra-max-xmapi-codex-02",
+  "verdict": {
+    "file": "pelican.html",
+    "bytes": 28070,
+    "drawn": true,
+    "moving": true,
+    "svgs": 6,
+    "shapes": 169,
+    "motion": [
+      0.0308,
+      0.0336,
+      0.031
+    ],
+    "errors": 0,
+    "blocked_requests": 0,
+    "render_error": null
+  }
+}

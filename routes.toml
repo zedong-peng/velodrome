@@ -1,0 +1,10 @@
+# What `velodrome.py run` should run next: one line per route, one run each
+# unless `attempts` says more. effort "default" leaves the harness at its own
+# setting. Routes that already have their runs in runs/ are skipped.
+#
+# Examples:
+#   { harness = "claude-code", provider = "claude-max", model = "claude-opus-5-5", effort = "max" },
+#   { harness = "opencode", provider = "opencode-go", model = "kimi-k3" },
+#   { harness = "pi", provider = "rightapi", model = "claude-opus-5-5" },
+
+routes = []

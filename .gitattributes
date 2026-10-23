@@ -1,0 +1,3 @@
+# Artwork stays byte-for-byte what the agent wrote.
+runs/**/pelican.html -text
+*.jpg binary

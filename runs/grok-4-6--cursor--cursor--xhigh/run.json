@@ -1,0 +1,26 @@
+{
+  "route": {
+    "model": "grok-4.6",
+    "harness": "cursor",
+    "provider": "cursor",
+    "effort": "xhigh"
+  },
+  "attempt": 1,
+  "archive": "grok-4-6-xhigh-cursor-cursor-01",
+  "verdict": {
+    "file": "pelican.html",
+    "bytes": 20374,
+    "drawn": true,
+    "moving": true,
+    "svgs": 1,
+    "shapes": 218,
+    "motion": [
+      0.0594,
+      0.0795,
+      0.0769
+    ],
+    "errors": 0,
+    "blocked_requests": 0,
+    "render_error": null
+  }
+}
