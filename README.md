@@ -1,6 +1,6 @@
 # Velodrome
 
-A pelican riding a bicycle, drawn by model, effort, harness and provider: [zedongpeng.com/velodrome](https://zedongpeng.com/velodrome/).
+How each new model draws a pelican riding a bicycle, at the highest effort we can get, in a coding agent: [zedongpeng.com/velodrome](https://zedongpeng.com/velodrome/).
 
 ```text
 不要联网 不查看本地其他文件，创建一个 HTML，内容是 SVG 绘制一个鹈鹕骑自行车的 2D 动画
@@ -24,6 +24,8 @@ Each run is one attempt: the file the agent wrote, unedited. Every run is mine; 
 The slug is `<model>--<harness>--<provider>--<effort>`, with `--2`, `--3` for repeats. `run.json` holds the route, the render verdict (`drawn`, `moving`, file size, console errors) and, when the run was measured, time, tokens and list-price cost.
 
 The 34 runs from October 2026 were made by hand in each harness, except six measured by a script in OpenCode.
+
+The site leads with one run per model, newest release first (`released` in `catalog.toml`): the highest effort, then an official API over a subscription, then catalog order, chosen without looking at the picture. Models with more runs get a harness × provider table below. Runs through relays stay in `runs/` but are not shown.
 
 ## Render
 

@@ -1,9 +1,12 @@
 "use strict";
 
 const DATA = JSON.parse(document.getElementById("data").textContent);
-const RUNS = DATA.runs; // already sorted by model, harness, provider, effort, attempt
+const RUNS = DATA.runs; // official and subscription runs, sorted by model, harness, provider, effort, attempt
+const MODELS = DATA.models; // newest release first, each with the run the page leads with
 const BY_SLUG = new Map(RUNS.map((r) => [r.slug, r]));
-const ORDER = RUNS.map((r) => r.slug);
+const EFFORT_RANK = ["default", "none", "minimal", "low", "medium", "high", "xhigh", "max"];
+// Arrow keys step through runs in page order: the lead runs, then each model's other runs.
+const ORDER = [...MODELS.map((m) => m.lead), ...MODELS.flatMap((m) => m.runs.filter((s) => s !== m.lead))];
 const ART_W = 960;
 
 const $ = (sel) => document.querySelector(sel);
@@ -27,7 +30,8 @@ const fmtTime = (s) => {
 const fmtTokens = (n) => (n == null ? null : n >= 1e6 ? `${(n / 1e6).toFixed(2)}M` : n >= 1e3 ? `${(n / 1e3).toFixed(n >= 1e4 ? 0 : 1)}k` : String(n));
 const fmtCost = (c) => (c == null ? null : c < 0.01 ? "<$0.01" : `$${c.toFixed(2)}`);
 const fmtBytes = (b) => (b == null ? null : b >= 1024 ? `${(b / 1024).toFixed(1)} KB` : `${b} B`);
-const kindChip = (kind) => el("span", { class: `kind ${kind}`, text: kind });
+const fmtDate = (d) => (d ? new Date(`${d}T00:00:00Z`).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" }) : null);
+const route = (r) => `${r.harnessName} · ${r.providerName} · ${r.effort}`;
 
 // ------------------------------------------------------------------ cards
 
@@ -42,22 +46,23 @@ function liveFrame(slug, box) {
   return frame;
 }
 
-function card(r) {
-  const shot = r.drawn
+function shot(r) {
+  return r.drawn
     ? el("div", { class: "shot" },
-        el("img", { src: `posters/${r.slug}.jpg`, loading: "lazy", decoding: "async", alt: `Pelican by ${r.modelName}, ${r.harnessName}, ${r.effort}, ${r.providerName}` }),
+        el("img", { src: `posters/${r.slug}.jpg`, loading: "lazy", decoding: "async", alt: `Pelican by ${r.modelName}, ${route(r)}` }),
         r.moving ? null : el("span", { class: "badge", text: "still" }))
     : el("div", { class: "shot empty", text: "No drawing" });
-  const node = el("button", { class: "card", type: "button", "data-slug": r.slug },
-    shot,
-    el("div", { class: "label" },
-      el("div", { class: "primary" }, r.harnessName, el("span", { class: "effort", text: r.effort }), r.attempt > 1 ? el("small", { text: `#${r.attempt}` }) : null),
-      el("div", { class: "secondary" }, r.providerName, " ", kindChip(r.providerKind))));
+}
+
+// A card is a poster that plays the real file on hover and opens the detail sheet.
+function card(r, ...label) {
+  const s = shot(r);
+  const node = el("button", { class: "card", type: "button", "data-slug": r.slug }, s, el("div", { class: "label" }, label));
   node.addEventListener("click", () => openDetail(r.slug));
   if (r.drawn && canHover) {
     let timer = null, frame = null;
     node.addEventListener("pointerenter", () => {
-      timer = setTimeout(() => shot.append((frame = liveFrame(r.slug, shot))), 220);
+      timer = setTimeout(() => s.append((frame = liveFrame(r.slug, s))), 220);
     });
     node.addEventListener("pointerleave", () => {
       clearTimeout(timer);
@@ -71,22 +76,37 @@ function card(r) {
   return node;
 }
 
-function renderBoard() {
-  const board = $("#board");
-  let group = null, current = null;
-  for (const r of RUNS) {
-    if (r.model !== current) {
-      current = r.model;
-      const count = RUNS.filter((x) => x.model === r.model).length;
-      group = el("div", { class: "grid" });
-      // Small groups sit side by side; big ones take the full width.
-      const wide = count > 4;
-      if (!wide) group.style.setProperty("--n", count);
-      board.append(el("section", { class: wide ? "group wide" : count === 1 ? "group solo" : "group" },
-        el("h2", {}, r.modelName, el("small", { text: `${r.lab} · ${count} ${count === 1 ? "run" : "runs"}` })),
-        group));
-    }
-    group.append(card(r));
+function renderLatest() {
+  const grid = el("div", { class: "grid lead" });
+  for (const m of MODELS) {
+    const r = BY_SLUG.get(m.lead);
+    grid.append(card(r,
+      el("div", { class: "primary" }, el("span", { text: m.name }), el("time", { datetime: m.released, text: fmtDate(m.released) })),
+      el("div", { class: "secondary", text: route(r) })));
+  }
+  $("#latest").append(grid);
+}
+
+// One table per model with more than one run: harnesses down, providers across, efforts inside a cell.
+function renderMatrices() {
+  const box = $("#matrices");
+  for (const m of MODELS.filter((m) => m.runs.length > 1)) {
+    const runs = m.runs.map((s) => BY_SLUG.get(s));
+    const harnesses = [...new Set(runs.map((r) => r.harness))];
+    const providers = [...new Set(runs.map((r) => r.provider))];
+    const name = (k, field) => runs.find((r) => r[field] === k)[`${field}Name`];
+    const table = el("table", { class: "matrix" },
+      el("thead", {}, el("tr", {}, el("th", {}), providers.map((p) => el("th", { scope: "col", text: name(p, "provider") })))),
+      el("tbody", {}, harnesses.map((h) => el("tr", {},
+        el("th", { scope: "row", text: name(h, "harness") }),
+        providers.map((p) => {
+          const here = runs.filter((r) => r.harness === h && r.provider === p)
+            .sort((a, b) => EFFORT_RANK.indexOf(b.effort) - EFFORT_RANK.indexOf(a.effort) || a.attempt - b.attempt);
+          return el("td", {}, here.length
+            ? el("div", { class: "cell" }, here.map((r) => card(r, el("div", { class: "secondary" }, r.effort, r.attempt > 1 ? ` · attempt ${r.attempt}` : ""))))
+            : el("span", { class: "none", text: "—" }));
+        })))));
+    box.append(el("section", { class: "model" }, el("h3", { text: m.name }), el("div", { class: "scroll" }, table)));
   }
 }
 
@@ -105,12 +125,13 @@ function row(term, ...value) {
 function openDetail(slug) {
   const r = BY_SLUG.get(slug);
   if (!r) return;
-  $("#detail-kicker").textContent = r.attempt > 1 ? `${r.lab} · attempt ${r.attempt}` : r.lab;
+  const released = fmtDate(r.released);
+  $("#detail-kicker").textContent = [r.lab, released ? `released ${released}` : null, r.attempt > 1 ? `attempt ${r.attempt}` : null].filter(Boolean).join(" · ");
   $("#detail-title").textContent = r.modelName;
   $("#detail-route").replaceChildren(
     ...row("Effort", r.effort),
     ...row("Harness", r.harnessName, r.harnessVersion ? [" ", el("small", { text: r.harnessVersion })] : null),
-    ...row("Provider", r.providerName, " ", kindChip(r.providerKind)),
+    ...row("Provider", r.providerName),
   );
   $("#detail-receipt").replaceChildren(
     ...row("Date", r.date),
@@ -166,9 +187,8 @@ document.addEventListener("keydown", (e) => {
 
 // ------------------------------------------------------------------- boot
 
-const count = (k) => new Set(RUNS.map((r) => r[k])).size;
-$("#tally").textContent = `${RUNS.length} runs · ${count("model")} models · ${count("harness")} harnesses · ${count("provider")} providers`;
 for (const id of ["#repo-link", "#repo-link-2"]) $(id).href = DATA.repo;
-renderBoard();
+renderLatest();
+renderMatrices();
 const start = new URLSearchParams(location.hash.slice(1)).get("run");
 if (start && BY_SLUG.has(start)) openDetail(start);

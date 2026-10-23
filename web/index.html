@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Velodrome · a pelican riding a bicycle</title>
-<meta name="description" content="One prompt, a pelican riding a bicycle, drawn by many models, effort settings, coding agents and providers.">
+<meta name="description" content="How each new model draws a pelican riding a bicycle, at its highest effort, in a coding agent.">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="style.css">
 <script>
@@ -21,44 +21,25 @@
     <svg viewBox="0 0 56 32" aria-hidden="true"><rect x="2" y="2" width="52" height="28" rx="14" class="edge"/><rect x="8" y="8" width="40" height="16" rx="8" class="sprint"/><rect x="13" y="13" width="30" height="6" rx="3" class="stay"/></svg>
     <span>Velodrome</span>
   </a>
-  <nav><a href="#notes">Notes</a><a id="repo-link" href="https://github.com/zedong-peng/velodrome">GitHub</a></nav>
+  <nav><a id="repo-link" href="https://github.com/zedong-peng/velodrome">GitHub</a></nav>
 </header>
 
 <main>
   <section class="intro">
-    <h1>A pelican riding a bicycle, <span>drawn by model, effort, harness and provider.</span></h1>
-    <figure class="prompt">
-      <figcaption>Prompt</figcaption>
-      <code lang="zh"><!-- PROMPT --></code>
-      <p>No internet, don't look at other local files. Create an HTML file whose content is an SVG 2D animation of a pelican riding a bicycle.</p>
-    </figure>
-    <p class="tally" id="tally"></p>
+    <h1>A pelican riding a bicycle</h1>
+    <p class="lede">Each new model, at the highest effort we can get, in a coding agent. One prompt, one attempt, unedited.</p>
+    <p class="prompt"><span lang="zh"><!-- PROMPT --></span> <span class="en">No internet, don&rsquo;t look at other local files. Create an HTML file whose content is an SVG 2D animation of a pelican riding a bicycle.</span></p>
   </section>
 
-  <section id="board" aria-live="polite"></section>
+  <section id="latest" class="board" aria-live="polite"></section>
 
-  <section id="notes" class="notes">
-    <h2>Notes</h2>
-    <div class="steps">
-      <div>
-        <h3>One attempt each</h3>
-        <p>Every picture is the file the agent wrote, unedited and unpicked. Attempts that wrote nothing stay.</p>
-      </div>
-      <div>
-        <h3>Four labels</h3>
-        <p>The model; the effort, as the harness names it; the harness, the agent program that ran the model; the provider, where the model was served from: a subscription, the official API, or a relay that resells access.</p>
-      </div>
-      <div>
-        <h3>Numbers</h3>
-        <p>Six runs were timed by a script, so only they show time, tokens and cost (tokens at list price). The rest were run by hand and show a dash.</p>
-      </div>
-      <div>
-        <h3>Pictures</h3>
-        <p>Posters are frames at 2 seconds, rendered offline at 960&times;720. Hover or open a card to play the real file.</p>
-      </div>
-    </div>
-    <p class="fine">No submissions: every run is mine. New runs go through the <a id="repo-link-2" href="https://github.com/zedong-peng/velodrome">Harbor runner in the repository</a>. The pelican test is <a href="https://simonwillison.net/tags/pelican-riding-a-bicycle/">Simon Willison's</a>.</p>
+  <section id="routes" class="routes">
+    <h2>Harness and provider</h2>
+    <p class="sub">The same model through different coding agents (rows) and from different places it is served (columns).</p>
+    <div id="matrices"></div>
   </section>
+
+  <p class="fine">Posters are the frame at 2 seconds, rendered offline at 960&times;720; hover or open one to play the file. Providers are the model&rsquo;s official API or a subscription. Every run is mine; the <a id="repo-link-2" href="https://github.com/zedong-peng/velodrome">repository</a> has each file, its record and the runner. The test is <a href="https://simonwillison.net/tags/pelican-riding-a-bicycle/">Simon Willison&rsquo;s</a>.</p>
 </main>
 
 <footer>

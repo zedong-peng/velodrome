@@ -28,6 +28,10 @@ CSP = (
     "img-src data: blob:; font-src data:; media-src data: blob:"
 )
 EFFORTS = ["none", "minimal", "low", "medium", "high", "xhigh", "max", "default"]
+# The page leads with each model at its highest effort; "default" ranks lowest, since it names no level.
+EFFORT_RANK = {e: i for i, e in enumerate(["default"] + EFFORTS[:-1])}
+# Relays resell access to other labs' models; the page shows only official APIs and subscriptions.
+SHOWN_KINDS = ("official", "subscription")
 
 
 def check_run(path, catalog, problems):
@@ -74,6 +78,7 @@ def record(run, slug, catalog):
         "model": route["model"],
         "modelName": catalog["models"][route["model"]]["name"],
         "lab": catalog["models"][route["model"]]["lab"],
+        "released": catalog["models"][route["model"]].get("released"),
         "harness": route["harness"],
         "harnessName": catalog["harnesses"][route["harness"]]["name"],
         "harnessVersion": run.get("harness_version"),
@@ -104,6 +109,26 @@ def record(run, slug, catalog):
     }
 
 
+def models(data, catalog):
+    """One entry per model, newest release first, with the run the page leads with.
+
+    The lead run is chosen without looking at the picture: the highest effort, then an official API over a
+    subscription, then catalog order of harness and provider, then the first attempt.
+    """
+    kinds = {k: i for i, k in enumerate(SHOWN_KINDS)}
+    out = {}
+    for r in data:
+        out.setdefault(r["model"], []).append(r)
+    entries = []
+    for model, runs in out.items():
+        lead = min(runs, key=lambda r: (-EFFORT_RANK.get(r["effort"], -1), kinds[r["providerKind"]], r["sort"][1:]))
+        info = catalog["models"][model]
+        entries.append({"model": model, "name": info["name"], "lab": info["lab"], "released": info.get("released"),
+                        "lead": lead["slug"], "runs": [r["slug"] for r in runs]})
+    entries.sort(key=lambda m: (m["released"] or "", m["name"]), reverse=True)
+    return entries
+
+
 def main():
     catalog = load_toml("catalog.toml")
     problems, runs = [], []
@@ -128,11 +153,12 @@ def main():
             shutil.copyfile(path / "poster.jpg", SITE / "posters" / f"{path.name}.jpg")
         data.append(record(run, path.name, catalog))
     data.sort(key=lambda r: r["sort"])
+    data = [r for r in data if r["providerKind"] in SHOWN_KINDS]
+    payload = {"repo": REPO, "runs": data, "models": models(data, catalog)}
 
     prompt = (ROOT / "pelican" / "instruction.md").read_text().strip()
     page = (WEB / "index.html").read_text()
     page = page.replace("<!-- PROMPT -->", html.escape(prompt))
-    payload = {"repo": REPO, "runs": data}
     page = page.replace("/* DATA */", json.dumps(payload, ensure_ascii=False).replace("</", "<\\/"))
     (SITE / "index.html").write_text(page)
     for name in ("app.js", "style.css", "favicon.svg"):
