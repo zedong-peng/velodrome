@@ -80,10 +80,11 @@ function renderLatest() {
   const grid = el("div", { class: "grid lead" });
   for (const m of MODELS) {
     const r = BY_SLUG.get(m.lead);
-    grid.append(card(r,
-      el("div", { class: "primary" }, el("span", { text: m.name }), el("time", { datetime: m.released, text: fmtDate(m.released) })),
-      el("div", { class: "secondary", text: r.harnessName })));
+    const c = card(r, el("div", { class: "primary", text: m.name }), el("div", { class: "secondary", text: r.harnessName }));
+    c.prepend(el("time", { class: "meta", datetime: m.released, text: fmtDate(m.released) }));
+    grid.append(c);
   }
+  $("#count").textContent = `${MODELS.length} models`;
   $("#latest").append(grid);
 }
 

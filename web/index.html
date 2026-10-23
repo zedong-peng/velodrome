@@ -6,6 +6,7 @@
 <title>Velodrome · a pelican riding a bicycle</title>
 <meta name="description" content="How each new model draws a pelican riding a bicycle, at its highest effort, in a coding agent.">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preload" href="fonts/sourceserif4.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="style.css">
 <script>
   // Follow the theme chosen on zedongpeng.com, else the system.
@@ -21,17 +22,20 @@
     <svg viewBox="0 0 56 32" aria-hidden="true"><rect x="2" y="2" width="52" height="28" rx="14" class="edge"/><rect x="8" y="8" width="40" height="16" rx="8" class="sprint"/><rect x="13" y="13" width="30" height="6" rx="3" class="stay"/></svg>
     <span>Velodrome</span>
   </a>
-  <nav><a id="repo-link" href="https://github.com/zedong-peng/velodrome">GitHub</a></nav>
+  <nav><a id="repo-link" class="pill" href="https://github.com/zedong-peng/velodrome">GitHub</a></nav>
 </header>
 
 <main>
   <section class="intro">
-    <h1>A pelican riding a bicycle</h1>
-    <p class="lede">Each new model, at the highest effort we can get, in a coding agent. One prompt, one attempt, unedited.</p>
-    <p class="prompt"><span lang="zh"><!-- PROMPT --></span> <span class="en">No internet, don&rsquo;t look at other local files. Create an HTML file whose content is an SVG 2D animation of a pelican riding a bicycle.</span></p>
+    <h1><b>A pelican riding a bicycle.</b> Each new model, at the highest effort we can get, in a coding agent. One prompt, one attempt, unedited.</h1>
+    <div class="prompt">
+      <p class="tag">Prompt</p>
+      <p lang="zh"><!-- PROMPT --></p>
+      <p class="en">No internet, don&rsquo;t look at other local files. Create an HTML file whose content is an SVG 2D animation of a pelican riding a bicycle.</p>
+    </div>
   </section>
 
-  <section id="latest" class="board" aria-live="polite"></section>
+  <section id="latest" class="board" aria-live="polite"><p class="count" id="count"></p></section>
 
   <section id="routes" class="routes">
     <h2>Harness</h2>
