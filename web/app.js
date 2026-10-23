@@ -5,8 +5,8 @@ const RUNS = DATA.runs; // official and subscription runs, sorted by model, harn
 const MODELS = DATA.models; // newest release first, each with the run the page leads with
 const BY_SLUG = new Map(RUNS.map((r) => [r.slug, r]));
 const EFFORT_RANK = ["default", "none", "minimal", "low", "medium", "high", "xhigh", "max"];
-// Arrow keys step through runs in page order: the lead runs, then each model's other runs.
-const ORDER = [...MODELS.map((m) => m.lead), ...MODELS.flatMap((m) => m.runs.filter((s) => s !== m.lead))];
+// Arrow keys step through the runs the page shows: the lead runs, then each model's other harnesses.
+const ORDER = [...MODELS.map((m) => m.lead), ...MODELS.flatMap((m) => m.harnesses.filter((s) => s !== m.lead))];
 const ART_W = 960;
 
 const $ = (sel) => document.querySelector(sel);
@@ -31,7 +31,7 @@ const fmtTokens = (n) => (n == null ? null : n >= 1e6 ? `${(n / 1e6).toFixed(2)}
 const fmtCost = (c) => (c == null ? null : c < 0.01 ? "<$0.01" : `$${c.toFixed(2)}`);
 const fmtBytes = (b) => (b == null ? null : b >= 1024 ? `${(b / 1024).toFixed(1)} KB` : `${b} B`);
 const fmtDate = (d) => (d ? new Date(`${d}T00:00:00Z`).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" }) : null);
-const route = (r) => `${r.harnessName} · ${r.providerName} · ${r.effort}`;
+const route = (r) => `${r.harnessName} · ${r.providerName} · ${r.effort}`; // alt text and detail
 
 // ------------------------------------------------------------------ cards
 
@@ -82,31 +82,20 @@ function renderLatest() {
     const r = BY_SLUG.get(m.lead);
     grid.append(card(r,
       el("div", { class: "primary" }, el("span", { text: m.name }), el("time", { datetime: m.released, text: fmtDate(m.released) })),
-      el("div", { class: "secondary", text: route(r) })));
+      el("div", { class: "secondary", text: r.harnessName })));
   }
   $("#latest").append(grid);
 }
 
-// One table per model with more than one run: harnesses down, providers across, efforts inside a cell.
-function renderMatrices() {
+// One row per model with more than one harness: the best run of each, in catalog order.
+function renderHarnesses() {
   const box = $("#matrices");
-  for (const m of MODELS.filter((m) => m.runs.length > 1)) {
-    const runs = m.runs.map((s) => BY_SLUG.get(s));
-    const harnesses = [...new Set(runs.map((r) => r.harness))];
-    const providers = [...new Set(runs.map((r) => r.provider))];
-    const name = (k, field) => runs.find((r) => r[field] === k)[`${field}Name`];
-    const table = el("table", { class: "matrix" },
-      el("thead", {}, el("tr", {}, el("th", {}), providers.map((p) => el("th", { scope: "col", text: name(p, "provider") })))),
-      el("tbody", {}, harnesses.map((h) => el("tr", {},
-        el("th", { scope: "row", text: name(h, "harness") }),
-        providers.map((p) => {
-          const here = runs.filter((r) => r.harness === h && r.provider === p)
-            .sort((a, b) => EFFORT_RANK.indexOf(b.effort) - EFFORT_RANK.indexOf(a.effort) || a.attempt - b.attempt);
-          return el("td", {}, here.length
-            ? el("div", { class: "cell" }, here.map((r) => card(r, el("div", { class: "secondary" }, r.effort, r.attempt > 1 ? ` · attempt ${r.attempt}` : ""))))
-            : el("span", { class: "none", text: "—" }));
-        })))));
-    box.append(el("section", { class: "model" }, el("h3", { text: m.name }), el("div", { class: "scroll" }, table)));
+  for (const m of MODELS.filter((m) => m.harnesses.length > 1)) {
+    const row = el("div", { class: "grid harness" }, m.harnesses.map((s) => {
+      const r = BY_SLUG.get(s);
+      return card(r, el("div", { class: "secondary", text: r.harnessName }));
+    }));
+    box.append(el("section", { class: "model" }, el("h3", { text: m.name }), row));
   }
 }
 
@@ -189,6 +178,6 @@ document.addEventListener("keydown", (e) => {
 
 for (const id of ["#repo-link", "#repo-link-2"]) $(id).href = DATA.repo;
 renderLatest();
-renderMatrices();
+renderHarnesses();
 const start = new URLSearchParams(location.hash.slice(1)).get("run");
 if (start && BY_SLUG.has(start)) openDetail(start);

@@ -110,21 +110,27 @@ def record(run, slug, catalog):
 
 
 def models(data, catalog):
-    """One entry per model, newest release first, with the run the page leads with.
+    """One entry per model, newest release first, with the run the page leads with and one run per harness.
 
-    The lead run is chosen without looking at the picture: the highest effort, then an official API over a
-    subscription, then catalog order of harness and provider, then the first attempt.
+    Runs are chosen without looking at the picture: the highest effort, then an official API over a
+    subscription, then catalog order of harness and provider, then the first attempt. The lead is the best
+    run of the model, `harnesses` the best of each harness in catalog order; the provider shows only in a
+    run's detail.
     """
     kinds = {k: i for i, k in enumerate(SHOWN_KINDS)}
+    best = lambda runs: min(runs, key=lambda r: (-EFFORT_RANK.get(r["effort"], -1), kinds[r["providerKind"]], r["sort"][1:]))
     out = {}
     for r in data:
         out.setdefault(r["model"], []).append(r)
     entries = []
     for model, runs in out.items():
-        lead = min(runs, key=lambda r: (-EFFORT_RANK.get(r["effort"], -1), kinds[r["providerKind"]], r["sort"][1:]))
+        by_harness = {}
+        for r in runs:
+            by_harness.setdefault(r["harness"], []).append(r)
         info = catalog["models"][model]
         entries.append({"model": model, "name": info["name"], "lab": info["lab"], "released": info.get("released"),
-                        "lead": lead["slug"], "runs": [r["slug"] for r in runs]})
+                        "lead": best(runs)["slug"], "harnesses": [best(rs)["slug"] for rs in by_harness.values()],
+                        "runs": [r["slug"] for r in runs]})
     entries.sort(key=lambda m: (m["released"] or "", m["name"]), reverse=True)
     return entries
 
