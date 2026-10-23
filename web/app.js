@@ -95,21 +95,22 @@ function renderBoard() {
 const dialog = $("#detail");
 let detailFrame = null;
 
+// Every row is always there, with a dash when the value is unknown, so the
+// sheet keeps its layout while stepping through runs.
 function row(term, ...value) {
   const parts = value.flat().filter((v) => v !== null && v !== undefined && v !== "");
-  return parts.length ? [el("dt", { text: term }), el("dd", {}, parts)] : [];
+  return [el("dt", { text: term }), parts.length ? el("dd", {}, parts) : el("dd", { class: "none", text: "—" })];
 }
 
 function openDetail(slug) {
   const r = BY_SLUG.get(slug);
   if (!r) return;
-  $("#detail-kicker").textContent = r.lab;
+  $("#detail-kicker").textContent = r.attempt > 1 ? `${r.lab} · attempt ${r.attempt}` : r.lab;
   $("#detail-title").textContent = r.modelName;
   $("#detail-route").replaceChildren(
     ...row("Effort", r.effort),
     ...row("Harness", r.harnessName, r.harnessVersion ? [" ", el("small", { text: r.harnessVersion })] : null),
     ...row("Provider", r.providerName, " ", kindChip(r.providerKind)),
-    ...row("Attempt", r.attempt > 1 ? `#${r.attempt}` : null),
   );
   $("#detail-receipt").replaceChildren(
     ...row("Date", r.date),
