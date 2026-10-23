@@ -23,7 +23,7 @@ Each run is one attempt: the file the agent wrote, unedited. Every run is mine; 
 
 The slug is `<model>--<harness>--<provider>--<effort>`, with `--2`, `--3` for repeats. `run.json` holds the route, the render verdict (`drawn`, `moving`, file size, console errors) and, when the run was measured, time, tokens and list-price cost.
 
-The 34 runs from October 2026 were made by hand in each harness, except six measured by a script in OpenCode.
+Runs before 2026-10-24 were made by hand in each harness, except six measured by a script in OpenCode; their records say less. Later runs come from `velodrome.py run`, with the routes in `routes.toml`.
 
 The site leads with the newest release large, with its receipt, then one run per earlier model, newest first (`released` in `catalog.toml`); the run shown is the highest effort, then an official API over a subscription, then catalog order, chosen without looking at the picture. Models run in several harnesses get a row of their own below, one run per harness. Runs through relays stay in `runs/` but are not shown.
 
@@ -33,7 +33,7 @@ The site leads with the newest release large, with its receipt, then one run per
 
 ## New runs
 
-Needs Python 3.11+, Docker and `harbor`. Add routes to `routes.toml` and keys to `keys.env` (gitignored):
+Needs Python 3.11+, Docker and [Harbor](https://harborframework.com) (`uv tool install harbor==0.24.0`, the version these runs used). Add routes to `routes.toml` and keys to `keys.env` (gitignored):
 
 ```sh
 VELODROME_KEY_RIGHTAPI=sk-...
@@ -48,6 +48,8 @@ python3 velodrome.py run -j 3              # run what is missing
 ```
 
 Each run is a Harbor trial: the harness installs in a fresh container, the agent phase can reach only the provider's host, and a separate container renders the result. Claude Max uses the local Claude Code login; subscriptions are only used from their vendor's own harness. Harbor's job folders go to `jobs/` (gitignored).
+
+A route's effort is the highest the harness offers for that model; OpenCode lists its levels per model (`variants`), and a model with none runs at the default. The harness installs at its latest version unless the route sets `version`. To repeat a run, copy its `route` from `run.json` into `routes.toml` with `version` set to its `harness_version`.
 
 ## Site
 

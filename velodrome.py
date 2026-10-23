@@ -178,6 +178,9 @@ def connect(route, catalog, keys):
             sys.exit(f"{route_slug(route)}: {harness} has no effort setting; use effort = \"default\"")
         kwargs[knob] = effort
 
+    if route.get("version"):
+        kwargs["version"] = route["version"]  # the harness version to install; latest when unset
+
     hosts = sorted({urlsplit(base).hostname})
     return {"api": api, "model": arg, "kwargs": kwargs, "env": env, "hosts": hosts}
 
@@ -295,6 +298,20 @@ def render(slugs):
         say(f"{slug}: {'moving' if v['moving'] else 'drawn' if v['drawn'] else 'no drawing'}")
 
 
+def opencode_reasoning(log):
+    """Reasoning tokens in an OpenCode JSON event log, summed over its steps."""
+    total = 0
+    if log.exists():
+        for line in log.read_text(errors="replace").splitlines():
+            try:
+                event = json.loads(line)
+            except ValueError:
+                continue
+            if isinstance(event, dict) and event.get("type") == "step_finish":
+                total += ((event.get("part") or {}).get("tokens") or {}).get("reasoning") or 0
+    return total
+
+
 def import_trial(trial, route, plan, catalog, attempt):
     """Copy one finished trial into runs/<slug>/. Returns the slug, or None when it is not a result."""
     result = json.loads((trial / "result.json").read_text())
@@ -318,6 +335,9 @@ def import_trial(trial, route, plan, catalog, attempt):
 
     agent = result.get("agent_result") or {}
     tokens = {"input": agent.get("n_input_tokens"), "cache": agent.get("n_cache_tokens"), "output": agent.get("n_output_tokens")}
+    reasoning = opencode_reasoning(trial / "agent" / "opencode.txt")
+    if reasoning:
+        tokens["output"] = (tokens["output"] or 0) + reasoning  # Harbor leaves OpenCode's reasoning out; it is billed as output
     steps = None
     trajectory = trial / "agent" / "trajectory.json"
     if trajectory.exists():

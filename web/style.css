@@ -94,8 +94,7 @@ h1 b { font-family: var(--sans); font-weight: 700; letter-spacing: -0.015em; }
   color: var(--muted);
 }
 .prompt .tag { margin-bottom: 10px; }
-.prompt [lang="zh"] { font-size: 15px; color: var(--ink-2); }
-.prompt .en { margin-top: 4px; font: 400 16px/1.5 var(--serif); color: var(--muted); }
+.prompt .en { font: 400 18px/1.5 var(--serif); color: var(--ink-2); }
 
 /* ----------------------------------------------------------------- board */
 

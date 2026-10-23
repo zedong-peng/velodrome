@@ -72,6 +72,21 @@ class Routes(unittest.TestCase):
         self.assertIsNone(velodrome.list_cost({"input": None}, price))
 
 
+    def test_harness_version_is_passed_on(self):
+        route = {"harness": "opencode", "provider": "opencode-go", "model": "kimi-k3", "effort": "max", "version": "1.19.3"}
+        plan = velodrome.connect(route, CATALOG, {})
+        self.assertEqual(plan["kwargs"], {"variant": "max", "version": "1.19.3"})
+        self.assertIn("version=1.19.3", velodrome.harbor_command(route, plan, "job"))
+
+    def test_opencode_reasoning_counts_every_step(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            log = Path(tmp) / "opencode.txt"
+            step = lambda n: json.dumps({"type": "step_finish", "part": {"tokens": {"output": 5, "reasoning": n}}})
+            log.write_text("\n".join([step(100), "not json", json.dumps({"type": "text"}), step(23)]))
+            self.assertEqual(velodrome.opencode_reasoning(log), 123)
+            self.assertEqual(velodrome.opencode_reasoning(Path(tmp) / "missing.txt"), 0)
+
+
 class Build(unittest.TestCase):
     def test_csp_goes_first_in_head(self):
         out = build.protect("<!doctype html><html><head><title>x</title></head><body><svg></svg></body></html>")
