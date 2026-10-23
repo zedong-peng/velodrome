@@ -54,6 +54,6 @@ python3 build.py && python3 -m http.server -d site 8000
 python3 -m unittest discover -s tests
 ```
 
-Artwork is served from `site/art/` with a strict Content-Security-Policy, in frames sandboxed to scripts. The blog's deploy workflow builds this repo into `/velodrome/`.
+Artwork is served from `site/art/` with a strict Content-Security-Policy, in frames sandboxed to scripts. Every push to `main` deploys `site/` to GitHub Pages at `/velodrome/`.
 
 The pelican test is [Simon Willison's](https://simonwillison.net/tags/pelican-riding-a-bicycle/).
