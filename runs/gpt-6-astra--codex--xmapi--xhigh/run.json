@@ -6,7 +6,6 @@
     "effort": "xhigh"
   },
   "attempt": 1,
-  "archive": "gpt-6-astra-xhigh-xmapi-codex",
   "verdict": {
     "file": "pelican.html",
     "bytes": 12439,

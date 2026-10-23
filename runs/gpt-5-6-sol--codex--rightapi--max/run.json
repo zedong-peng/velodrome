@@ -6,7 +6,6 @@
     "effort": "max"
   },
   "attempt": 1,
-  "archive": "gpt-5-6-sol-max-rightapi-codex",
   "verdict": {
     "file": "pelican.html",
     "bytes": 11513,

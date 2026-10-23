@@ -6,7 +6,6 @@
     "effort": "max"
   },
   "attempt": 1,
-  "archive": "deepseek-flash-max-deepseek-api-opencode",
   "measured_by": "run.py v1",
   "harness_version": "1.19.3",
   "started_at": "2026-10-21T20:10:21Z",

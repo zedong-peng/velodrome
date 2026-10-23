@@ -6,7 +6,6 @@
     "effort": "max"
   },
   "attempt": 1,
-  "archive": "gpt-6-astra-max-rightapi-codex",
   "verdict": {
     "file": "pelican.html",
     "bytes": 13352,

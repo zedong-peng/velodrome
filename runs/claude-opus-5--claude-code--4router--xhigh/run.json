@@ -6,7 +6,6 @@
     "effort": "xhigh"
   },
   "attempt": 1,
-  "archive": "claude-opus-5-xhigh-4router-net-cheapclaude-claude-code-01",
   "verdict": {
     "file": "pelican.html",
     "bytes": 11377,

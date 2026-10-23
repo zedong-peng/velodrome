@@ -6,7 +6,6 @@
     "effort": "xhigh"
   },
   "attempt": 1,
-  "archive": "claude-opus-5-5-xhigh-claude-max5x-claude-code",
   "verdict": {
     "file": "pelican.html",
     "bytes": 25572,

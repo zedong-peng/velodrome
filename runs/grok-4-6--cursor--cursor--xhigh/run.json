@@ -6,7 +6,6 @@
     "effort": "xhigh"
   },
   "attempt": 1,
-  "archive": "grok-4-6-xhigh-cursor-cursor-01",
   "verdict": {
     "file": "pelican.html",
     "bytes": 20374,

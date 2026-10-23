@@ -6,7 +6,6 @@
     "effort": "xhigh"
   },
   "attempt": 1,
-  "archive": "gpt-5-6-sol-xhigh-xmapi-codex-01",
   "verdict": {
     "file": "pelican.html",
     "bytes": 13607,

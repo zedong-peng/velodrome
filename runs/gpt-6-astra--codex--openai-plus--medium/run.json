@@ -6,7 +6,6 @@
     "effort": "medium"
   },
   "attempt": 1,
-  "archive": "gpt-6-astra-medium-openai-plus-codex",
   "verdict": {
     "file": "pelican.html",
     "bytes": 13316,

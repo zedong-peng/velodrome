@@ -6,7 +6,6 @@
     "effort": "max"
   },
   "attempt": 1,
-  "archive": "deepseek-v4-1-flash-max-opencode-go-pi-01",
   "verdict": {
     "file": "pelican.html",
     "bytes": 20276,

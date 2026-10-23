@@ -6,7 +6,6 @@
     "effort": "max"
   },
   "attempt": 1,
-  "archive": "claude-haiku-5-5-max-opencode-go-opencode",
   "measured_by": "run.py v1",
   "harness_version": "1.19.3",
   "started_at": "2026-10-21T21:45:55Z",
