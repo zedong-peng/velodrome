@@ -25,7 +25,7 @@ The slug is `<model>--<harness>--<provider>--<effort>`, with `--2`, `--3` for re
 
 The 34 runs from October 2026 were made by hand in each harness, except six measured by a script in OpenCode.
 
-The site leads with one run per model, newest release first (`released` in `catalog.toml`): the highest effort, then an official API over a subscription, then catalog order, chosen without looking at the picture. Models with more runs get a harness × provider table below. Runs through relays stay in `runs/` but are not shown.
+The site leads with the newest release large, with its receipt, then one run per earlier model, newest first (`released` in `catalog.toml`); each is the highest effort, then an official API over a subscription, then catalog order, chosen without looking at the picture. Models with more runs get a harness × provider table below. Runs through relays stay in `runs/` but are not shown.
 
 ## Render
 

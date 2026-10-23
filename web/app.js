@@ -76,16 +76,39 @@ function card(r, ...label) {
   return node;
 }
 
+// What a card says under the model: the harness, and why there is no drawing when the record knows.
+function secondary(r) {
+  if (!r.drawn && !r.file && r.tokensOut) return `${r.harnessName} · no file after ${fmtTokens(r.tokensOut)} output tokens`;
+  return r.harnessName;
+}
+
+// The newest release large, with its receipt; then every earlier model, newest first.
 function renderLatest() {
+  const [first, ...rest] = MODELS;
+  const r = BY_SLUG.get(first.lead);
+  const facts = [
+    ["Time", fmtTime(r.seconds)], ["Steps", r.steps != null ? String(r.steps) : null],
+    ["Output", r.tokensOut != null ? `${fmtTokens(r.tokensOut)} tokens` : null], ["List cost", fmtCost(r.cost)],
+  ].filter(([, v]) => v);
+  const feature = el("div", { class: "feature" },
+    card(r),
+    el("div", { class: "feature-text" },
+      el("time", { class: "meta", datetime: first.released, text: fmtDate(first.released) }),
+      el("h2", { text: first.name }),
+      el("p", { class: "lede", text: `${first.lab}, in ${r.harnessName} at ${r.effort} effort.` }),
+      facts.length ? el("dl", {}, facts.flatMap(([k, v]) => [el("dt", { text: k }), el("dd", { text: v })])) : null,
+      el("button", { class: "pill", type: "button", text: "Open" }),
+    ));
+  feature.querySelector(".feature-text .pill").addEventListener("click", () => openDetail(r.slug));
   const grid = el("div", { class: "grid lead" });
-  for (const m of MODELS) {
-    const r = BY_SLUG.get(m.lead);
-    const c = card(r, el("div", { class: "primary", text: m.name }), el("div", { class: "secondary", text: r.harnessName }));
+  for (const m of rest) {
+    const x = BY_SLUG.get(m.lead);
+    const c = card(x, el("div", { class: "primary", text: m.name }), el("div", { class: "secondary", text: secondary(x) }));
     c.prepend(el("time", { class: "meta", datetime: m.released, text: fmtDate(m.released) }));
     grid.append(c);
   }
-  $("#count").textContent = `${MODELS.length} models`;
-  $("#latest").append(grid);
+  $("#latest").append(el("p", { class: "count", text: "Latest release" }), feature,
+    el("p", { class: "count earlier", text: `Earlier · ${rest.length} models` }), grid);
 }
 
 // One row per model with more than one harness: the best run of each, in catalog order.
@@ -94,7 +117,7 @@ function renderHarnesses() {
   for (const m of MODELS.filter((m) => m.harnesses.length > 1)) {
     const row = el("div", { class: "grid harness" }, m.harnesses.map((s) => {
       const r = BY_SLUG.get(s);
-      return card(r, el("div", { class: "secondary", text: r.harnessName }));
+      return card(r, el("div", { class: "secondary", text: secondary(r) }));
     }));
     box.append(el("section", { class: "model" }, el("h3", { text: m.name }), row));
   }
