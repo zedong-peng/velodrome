@@ -87,7 +87,7 @@ h1 b { font-family: var(--sans); font-weight: 700; letter-spacing: -0.015em; }
 
 .intro .lede { margin: 18px 0 0; max-width: 720px; font: 400 19px/1.5 var(--serif); color: var(--muted); }
 
-.prompt { margin: 36px 0 0; max-width: 720px; }
+.prompt { margin: 36px 0 0; max-width: 800px; text-wrap: pretty; }
 .prompt p { margin: 0; }
 .prompt .tag, .count, .meta, .kicker {
   font: 12px/1.2 var(--mono);
@@ -96,7 +96,8 @@ h1 b { font-family: var(--sans); font-weight: 700; letter-spacing: -0.015em; }
   color: var(--muted);
 }
 .prompt .tag { margin-bottom: 10px; }
-.prompt .en { font: 400 18px/1.5 var(--serif); color: var(--ink-2); }
+.prompt [lang="zh"] { font-size: 17px; line-height: 1.6; color: var(--ink); }
+.prompt .en { margin-top: 4px; font: 400 17px/1.5 var(--serif); color: var(--muted); }
 
 /* ----------------------------------------------------------------- board */
 

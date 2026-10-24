@@ -28,9 +28,10 @@
 <main>
   <section class="intro">
     <h1><b>A pelican riding a bicycle, animated.</b> Simon Willison asks models for a still picture. We ask each new model, working offline in a coding agent, for an animation.</h1>
-    <p class="lede">One prompt, one attempt, at the highest effort we can get. Nothing is edited.</p>
+    <p class="lede">One prompt. Each run is a single attempt, shown unedited.</p>
     <div class="prompt">
       <p class="tag">Prompt</p>
+      <p lang="zh"><!-- PROMPT --></p>
       <p class="en">No internet, don&rsquo;t look at other local files. Create an HTML file whose content is an SVG 2D animation of a pelican riding a bicycle.</p>
     </div>
   </section>
@@ -49,7 +50,7 @@
       <li>The agent starts in a fresh container with an empty folder and can reach only its model&rsquo;s provider. There is no browser, so it never sees what it draws.</li>
       <li>It stops on its own, or at 30 minutes.</li>
       <li>A separate container opens the file offline at 960&times;720. The poster is the frame at 2 seconds; hover or open a card to play the file.</li>
-      <li>Effort is the highest the agent offers for that model; a model without the setting runs at its default. The provider is the model&rsquo;s official API or a subscription.</li>
+      <li>Effort is the highest the agent offers for that model, unless the card names another; a model without the setting runs at its default. The provider is the model&rsquo;s official API or a subscription.</li>
       <li>Cost is at list price; a subscription run costs nothing extra.</li>
       <li>One attempt is one sample. Run it again and the drawing changes.</li>
     </ul>

@@ -5,8 +5,10 @@ const RUNS = DATA.runs; // official and subscription runs, sorted by model, harn
 const MODELS = DATA.models; // newest release first, each with the run the page leads with
 const BY_SLUG = new Map(RUNS.map((r) => [r.slug, r]));
 const EFFORT_RANK = ["default", "none", "minimal", "low", "medium", "high", "xhigh", "max"];
-// Arrow keys step through the runs the page shows: the lead runs, then each model's other harnesses.
-const ORDER = [...MODELS.map((m) => m.lead), ...MODELS.flatMap((m) => m.harnesses.filter((s) => s !== m.lead))];
+// Each model's runs as the grid shows them: its lead run first, then the rest in catalog order.
+const MODEL_RUNS = new Map(MODELS.map((m) => [m.model, [m.lead, ...RUNS.filter((r) => r.model === m.model && r.slug !== m.lead).map((r) => r.slug)]]));
+// Arrow keys step through the main grid.
+const ORDER = MODELS.flatMap((m) => MODEL_RUNS.get(m.model));
 const ART_W = 960;
 
 const $ = (sel) => document.querySelector(sel);
@@ -82,17 +84,32 @@ function secondary(r) {
   return r.harnessName;
 }
 
-// One card per model, newest release first.
+// The harness, plus whatever tells this run apart from the model's other runs in the same harness.
+function label(r) {
+  const same = RUNS.filter((x) => x.model === r.model && x.harness === r.harness);
+  const varies = (k) => new Set(same.map((x) => x[k])).size > 1;
+  const parts = [r.harnessName];
+  if (varies("providerName")) parts.push(r.providerName);
+  if (varies("effort")) parts.push(r.effort);
+  if (varies("attempt") && r.attempt > 1) parts.push(`attempt ${r.attempt}`);
+  if (!r.drawn && !r.file && r.tokensOut) parts.push(`no file after ${fmtTokens(r.tokensOut)} output tokens`);
+  return parts.join(" · ");
+}
+
+// Every run, newest release first.
 function renderLatest() {
   const grid = el("div", { class: "grid lead" });
   for (const m of MODELS) {
-    const r = BY_SLUG.get(m.lead);
-    const c = card(r, el("div", { class: "primary", text: m.name }), el("div", { class: "secondary", text: secondary(r) }));
-    c.prepend(el("time", { class: "meta", datetime: m.released, text: fmtDate(m.released) }));
-    grid.append(c);
+    for (const slug of MODEL_RUNS.get(m.model)) {
+      const r = BY_SLUG.get(slug);
+      const c = card(r, el("div", { class: "primary", text: m.name }), el("div", { class: "secondary", text: label(r) }));
+      c.prepend(el("time", { class: "meta", datetime: m.released, text: fmtDate(m.released) }));
+      grid.append(c);
+    }
   }
   const updated = RUNS.map((r) => r.date).filter(Boolean).sort().pop();
-  $("#latest").append(el("p", { class: "count", text: [`${MODELS.length} models`, updated ? `updated ${fmtDate(updated)}` : null].filter(Boolean).join(" · ") }), grid);
+  const count = [`${MODELS.length} models`, `${RUNS.length} runs`, updated ? `updated ${fmtDate(updated)}` : null];
+  $("#latest").append(el("p", { class: "count", text: count.filter(Boolean).join(" · ") }), grid);
 }
 
 // One row per model with more than one harness: the best run of each, in catalog order.
