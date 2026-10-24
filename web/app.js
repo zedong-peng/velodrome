@@ -91,7 +91,8 @@ function renderLatest() {
     c.prepend(el("time", { class: "meta", datetime: m.released, text: fmtDate(m.released) }));
     grid.append(c);
   }
-  $("#latest").append(el("p", { class: "count", text: `${MODELS.length} models` }), grid);
+  const updated = RUNS.map((r) => r.date).filter(Boolean).sort().pop();
+  $("#latest").append(el("p", { class: "count", text: [`${MODELS.length} models`, updated ? `updated ${fmtDate(updated)}` : null].filter(Boolean).join(" · ") }), grid);
 }
 
 // One row per model with more than one harness: the best run of each, in catalog order.

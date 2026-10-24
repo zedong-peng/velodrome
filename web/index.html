@@ -27,7 +27,8 @@
 
 <main>
   <section class="intro">
-    <h1><b>A pelican riding a bicycle.</b> Each new model, at the highest effort we can get, in a coding agent. One prompt, one attempt, unedited.</h1>
+    <h1><b>A pelican riding a bicycle, animated.</b> Simon Willison asks models for a still picture. We ask each new model, working offline in a coding agent, for an animation.</h1>
+    <p class="lede">One prompt, one attempt, at the highest effort we can get. Nothing is edited.</p>
     <div class="prompt">
       <p class="tag">Prompt</p>
       <p class="en">No internet, don&rsquo;t look at other local files. Create an HTML file whose content is an SVG 2D animation of a pelican riding a bicycle.</p>
@@ -37,12 +38,23 @@
   <section id="latest" class="board" aria-live="polite"></section>
 
   <section id="routes" class="routes">
-    <h2>Harness</h2>
-    <p class="sub">The same model in different coding agents, each at its highest effort.</p>
+    <h2>Same model, different agent</h2>
+    <p class="sub">Each at its highest effort. The agent changes the drawing, and sometimes whether there is one: Claude Haiku 5.5 drew in Claude Code and wrote nothing in OpenCode.</p>
     <div id="matrices"></div>
   </section>
 
-  <p class="fine">Posters are the frame at 2 seconds, rendered offline at 960&times;720; hover or open one to play the file, its effort and provider (the model&rsquo;s official API or a subscription) included. Every run is mine; the <a id="repo-link-2" href="https://github.com/zedong-peng/velodrome">repository</a> has each file, its record and the runner. The test is <a href="https://simonwillison.net/tags/pelican-riding-a-bicycle/">Simon Willison&rsquo;s</a>.</p>
+  <section class="method">
+    <h2>How a run works</h2>
+    <ul>
+      <li>The agent starts in a fresh container with an empty folder and can reach only its model&rsquo;s provider. There is no browser, so it never sees what it draws.</li>
+      <li>It stops on its own, or at 30 minutes.</li>
+      <li>A separate container opens the file offline at 960&times;720. The poster is the frame at 2 seconds; hover or open a card to play the file.</li>
+      <li>Effort is the highest the agent offers for that model; a model without the setting runs at its default. The provider is the model&rsquo;s official API or a subscription.</li>
+      <li>Cost is at list price; a subscription run costs nothing extra.</li>
+      <li>One attempt is one sample. Run it again and the drawing changes.</li>
+    </ul>
+    <p class="fine">Runs before October 24, 2026 were made by hand or by an earlier script, outside this container, and record less. Every file, its record and the runner are in the <a id="repo-link-2" href="https://github.com/zedong-peng/velodrome">repository</a>. The test is <a href="https://simonwillison.net/tags/pelican-riding-a-bicycle/">Simon Willison&rsquo;s</a>.</p>
+  </section>
 </main>
 
 <footer>

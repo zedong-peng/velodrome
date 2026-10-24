@@ -85,6 +85,8 @@ h1 {
 }
 h1 b { font-family: var(--sans); font-weight: 700; letter-spacing: -0.015em; }
 
+.intro .lede { margin: 18px 0 0; max-width: 720px; font: 400 19px/1.5 var(--serif); color: var(--muted); }
+
 .prompt { margin: 36px 0 0; max-width: 720px; }
 .prompt p { margin: 0; }
 .prompt .tag, .count, .meta, .kicker {
@@ -196,6 +198,13 @@ h1 b { font-family: var(--sans); font-weight: 700; letter-spacing: -0.015em; }
 .grid.harness { grid-template-columns: repeat(auto-fill, minmax(168px, 1fr)); gap: 24px 16px; }
 .grid.harness .label { padding-top: 10px; }
 .grid.harness .label .secondary { margin: 0; color: var(--ink-2); }
+
+.method { margin-top: 56px; padding: 48px 0 0; border-top: 1px solid var(--line); }
+.method h2 { margin: 0 0 18px; font-size: 28px; line-height: 1.2; letter-spacing: -0.015em; }
+.method ul { margin: 0; padding: 0; max-width: 760px; list-style: none; }
+.method li { padding: 12px 0; border-top: 1px solid var(--line); font: 400 17px/1.55 var(--serif); color: var(--ink-2); }
+.method li:first-child { border-top: 0; padding-top: 0; }
+.method .fine { margin-top: 24px; }
 
 .fine { margin: 40px 0 0; padding: 24px 0 0; border-top: 1px solid var(--line); color: var(--muted); font-size: 13.5px; line-height: 1.6; max-width: 720px; }
 
