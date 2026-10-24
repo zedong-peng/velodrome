@@ -1,0 +1,40 @@
+{
+  "route": {
+    "harness": "opencode",
+    "provider": "opencode-go",
+    "model": "longcat-2.0",
+    "effort": "default",
+    "api": "chat"
+  },
+  "attempt": 1,
+  "harness_version": "1.19.4",
+  "harbor_version": "0.24.0",
+  "task_checksum": "c8d5a14595e67070e518bf851e92c6fb736f6b66c17d05d9c6a2be96c91f0e1f",
+  "started_at": "2026-10-23T23:43:47.007014Z",
+  "agent_seconds": 46.2,
+  "steps": 3,
+  "tokens": {
+    "input": 18373,
+    "cache": 14592,
+    "output": 3602
+  },
+  "list_cost_usd": 0.0055,
+  "harness_cost_usd": 0.0055442519999999995,
+  "exception": "NonZeroAgentExitCodeError",
+  "verdict": {
+    "file": "pelican_bike.html",
+    "bytes": 7724,
+    "drawn": true,
+    "moving": true,
+    "svgs": 1,
+    "shapes": 78,
+    "motion": [
+      0.0561,
+      0.0629,
+      0.0543
+    ],
+    "errors": 0,
+    "blocked_requests": 0,
+    "render_error": null
+  }
+}

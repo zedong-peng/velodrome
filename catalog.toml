@@ -257,7 +257,7 @@ released = "2026-08-13"
 price = { input = 0.66, output = 1.98, cache_read = 0.022 }
 
 [models."deepseek-v4.1-flash"]
-name = "DeepSeek V4.1 Flash"
+name = "DeepSeek V4.1 Flash 0910"
 lab = "DeepSeek"
 released = "2026-09-10"
 price = { input = 0.15, output = 0.6, cache_read = 0.003 }
@@ -387,4 +387,10 @@ price = { input = 0.1, output = 0.2, cache_read = 0.002 }
 name = "Beam"
 lab = "Undisclosed"
 released = "2026-10-05"
+price = { input = 0, output = 0, cache_read = 0 }
+
+[models."longcat-2.5-preview-free"]
+name = "LongCat 2.5 Preview"
+lab = "Meituan"
+released = "2026-09-25"
 price = { input = 0, output = 0, cache_read = 0 }

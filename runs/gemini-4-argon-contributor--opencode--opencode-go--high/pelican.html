@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>鹈鹕骑自行车 - 2D SVG Animation</title>
+  <style>
+    :root {
+      --bg-top: #38bdf8;
+      --bg-mid: #bae6fd;
+      --bg-warm: #fef3c7;
+      --panel-bg: rgba(15, 23, 42, 0.72);
+      --panel-border: rgba(255, 255, 255, 0.2);
+      --accent: #f97316;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at 50% 25%, #1e293b 0%, #0f172a 100%);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: #f8fafc;
+      padding: 20px;
+      overflow-x: hidden;
+    }
+
+    .stage-wrapper {
+      width: 100%;
+      max-width: 960px;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow:
+        0 25px 60px -15px rgba(0, 0, 0, 0.65),
+        0 0 0 1px rgba(255, 255, 255, 0.12);
+      background: #0f172a;
+      position: relative;
+    }
+
+    svg {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-top: 16px;
+      padding: 12px 20px;
+      width: 100%;
+      max-width: 960px;
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: 16px;
+      backdrop-filter: blur(10px);
+    }
+
+    .title-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      font-size: 15px;
+      color: #e2e8f0;
+    }
+
+    .badge {
+      background: linear-gradient(135deg, #f97316, #fbbf24);
+      color: #0f172a;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 999px;
+    }
+
+    .control-items {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .slider-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: #cbd5e1;
+    }
+
+    input[type="range"] {
+      accent-color: var(--accent);
+      cursor: pointer;
+      width: 110px;
+    }
+
+    button {
+      background: rgba(255, 255, 255, 0.1);
+      color: #f8fafc;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      padding: 7px 14px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+
+    button:hover {
+      background: rgba(249, 115, 22, 0.25);
+      border-color: #f97316;
+      transform: translateY(-1px);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    /* CSS fallback / ambient animations */
+    @keyframes sunPulse {
+      0%, 100% { transform: scale(1); opacity: 0.45; }
+      50% { transform: scale(1.08); opacity: 0.65; }
+    }
+
+    .sun-halo {
+      transform-origin: 760px 115px;
+      animation: sunPulse 4s ease-in-out infinite;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="stage-wrapper">
+    <svg id="scene" viewBox="0 0 960 600" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <!-- Sky & Environment Gradients -->
+        <linearGradient id="skyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#2563eb" />
+          <stop offset="38%" stop-color="#38bdf8" />
+          <stop offset="76%" stop-color="#bae6fd" />
+          <stop offset="100%" stop-color="#fef3c7" />
+        </linearGradient>
+
+        <radialGradient id="sunGlow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#fef08a" stop-opacity="1" />
+          <stop offset="45%" stop-color="#fde047" stop-opacity="0.55" />
+          <stop offset="100%" stop-color="#fde047" stop-opacity="0" />
+        </radialGradient>
+
+        <linearGradient id="seaGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#0284c7" />
+          <stop offset="55%" stop-color="#0369a1" />
+          <stop offset="100%" stop-color="#0f172a" />
+        </linearGradient>
+
+        <linearGradient id="roadGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#334155" />
+          <stop offset="100%" stop-color="#1e293b" />
+        </linearGradient>
+
+        <!-- Pelican Feather & Beak Gradients -->
+        <linearGradient id="bodyFeatherGrad" x1="15%" y1="10%" x2="85%" y2="90%">
+          <stop offset="0%" stop-color="#ffffff" />
+          <stop offset="65%" stop-color="#f8fafc" />
+          <stop offset="100%" stop-color="#cbd5e1" />
+        </linearGradient>
+
+        <linearGradient id="wingFeatherGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#ffffff" />
+          <stop offset="60%" stop-color="#f1f5f9" />
+          <stop offset="100%" stop-color="#94a3b8" />
+        </linearGradient>
+
+        <linearGradient id="beakTopGrad" x1="0%" y1="0%" x2="100%" y2="20%">
+          <stop offset="0%" stop-color="#fde047" />
+          <stop offset="55%" stop-color="#f59e0b" />
+          <stop offset="92%" stop-color="#ea580c" />
+          <stop offset="100%" stop-color="#dc2626" />
+        </linearGradient>
+
+        <linearGradient id="pouchGrad" x1="20%" y1="0%" x2="70%" y2="100%">
+          <stop offset="0%" stop-color="#fef08a" />
+          <stop offset="40%" stop-color="#fbbf24" />
+          <stop offset="85%" stop-color="#ea580c" />
+          <stop offset="100%" stop-color="#c2410c" />
+        </linearGradient>
+
+        <linearGradient id="legGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#fb923c" />
+          <stop offset="100%" stop-color="#ea580c" />
+        </linearGradient>
+
+        <linearGradient id="farLegGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#ea580c" />
+          <stop offset="100%" stop-color="#9a3412" />
+        </linearGradient>
+
+        <!-- Bicycle Gradients -->
+        <linearGradient id="frameGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#14b8a6" />
+          <stop offset="50%" stop-color="#0d9488" />
+          <stop offset="100%" stop-color="#115e59" />
+        </linearGradient>
+
+        <linearGradient id="chromeGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#f8fafc" />
+          <stop offset="50%" stop-color="#cbd5e1" />
+          <stop offset="100%" stop-color="#64748b" />
+        </linearGradient>
+
+        <linearGradient id="basketGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#eab308" />
+          <stop offset="50%" stop-color="#ca8a04" />
+          <stop offset="100%" stop-color="#854d0e" />
+        </linearGradient>
+
+        <linearGradient id="scarfGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#ef4444" />
+          <stop offset="60%" stop-color="#dc2626" />
+          <stop offset="100%" stop-color="#991b1b" />
+        </linearGradient>
+
+        <!-- Reusable Wheel Spokes Group -->
+        <g id="wheelStructure">
+          <!-- Outer Tire -->
+          <circle cx="0" cy="0" r="82" fill="none" stroke="#1e293b" stroke-width="14" />
+          <!-- Whitewall / Cream Tire Sidewall -->
+          <circle cx="0" cy="0" r="74" fill="none" stroke="#fef3c7" stroke-width="4.5" />
+          <!-- Metallic Rim -->
+          <circle cx="0" cy="0" r="69" fill="none" stroke="#cbd5e1" stroke-width="4" />
+          <!-- Spokes (16 spokes) -->
+          <g stroke="#e2e8f0" stroke-width="1.8" stroke-linecap="round" opacity="0.9">
+            <line x1="-68" y1="0" x2="68" y2="0" />
+            <line x1="0" y1="-68" x2="0" y2="68" />
+            <line x1="-48.1" y1="-48.1" x2="48.1" y2="48.1" />
+            <line x1="-48.1" y1="48.1" x2="48.1" y2="-48.1" />
+            <line x1="-62.8" y1="-26" x2="62.8" y2="26" />
+            <line x1="-26" y1="-62.8" x2="26" y2="62.8" />
+            <line x1="-62.8" y1="26" x2="62.8" y2="-26" />
+            <line x1="-26" y1="62.8" x2="26" y2="-62.8" />
+          </g>
+          <!-- Brass Valve & Reflector -->
+          <rect x="-2.5" y="59" width="5" height="9" rx="1.5" fill="#fbbf24" />
+          <rect x="44" y="-4" width="11" height="8" rx="3" fill="#f97316" stroke="#fff" stroke-width="1" />
+          <!-- Center Hub -->
+          <circle cx="0" cy="0" r="10" fill="#64748b" stroke="#f8fafc" stroke-width="2.5" />
+        </g>
+
+        <!-- Cloud Template -->
+        <g id="cloudShape">
+          <path d="M -55 15
+                   C -72 15, -80 -5, -62 -14
+                   C -58 -36, -24 -42, -10 -24
+                   C 6 -44, 44 -38, 50 -14
+                   C 72 -12, 78 15, 54 15 Z"
+                fill="#ffffff" opacity="0.88" />
+          <path d="M -50 15
+                   C -62 15, -68 4, -55 -4
+                   C -42 -15, 25 -18, 52 3
+                   C 60 8, 58 15, 48 15 Z"
+                fill="#e0f2fe" opacity="0.65" />
+        </g>
+      </defs>
+
+      <!-- ================= 1. SKY & SUN ================= -->
+      <rect width="960" height="600" fill="url(#skyGrad)" />
+
+      <g class="sun-halo">
+        <circle cx="760" cy="115" r="115" fill="url(#sunGlow)" />
+      </g>
+      <circle cx="760" cy="115" r="46" fill="#fef9c3" />
+
+      <!-- ================= 2. PARALLAX CLOUDS & SEAGULLS ================= -->
+      <g id="cloudsLayer">
+        <use href="#cloudShape" id="cloud1" transform="translate(170, 95) scale(1.1)" />
+        <use href="#cloudShape" id="cloud2" transform="translate(520, 72) scale(0.75)" />
+        <use href="#cloudShape" id="cloud3" transform="translate(830, 145) scale(0.92)" />
+      </g>
+
+      <!-- Distant Seagulls -->
+      <g id="seagullsLayer" fill="none" stroke="#1e3a8a" stroke-width="2.2" stroke-linecap="round" opacity="0.55">
+        <path id="gull1" d="M 220 140 Q 230 130 240 140 Q 250 130 260 140" />
+        <path id="gull2" d="M 275 122 Q 282 114 290 122 Q 298 114 305 122" />
+        <path id="gull3" d="M 640 165 Q 649 156 658 165 Q 667 156 676 165" />
+      </g>
+
+      <!-- ================= 3. DISTANT COASTLINE & OCEAN ================= -->
+      <!-- Distant Headland & Lighthouse -->
+      <g id="distantCoast">
+        <path d="M 0 385 Q 140 335 310 375 T 660 365 Q 820 350 960 385 L 960 410 L 0 410 Z" fill="#64748b" opacity="0.35" />
+        <path d="M 0 392 Q 95 352 230 392 Z" fill="#475569" opacity="0.55" />
+        <!-- Lighthouse on cliff -->
+        <g transform="translate(115, 315)">
+          <polygon points="0,52 16,52 13,8 3,8" fill="#f8fafc" />
+          <polygon points="1.2,36 14.8,36 14,24 2,24" fill="#ef4444" />
+          <rect x="1" y="3" width="14" height="5" rx="1" fill="#1e293b" />
+          <rect x="4" y="-4" width="8" height="7" fill="#fef08a" />
+          <polygon points="2,-4 14,-4 8,-11" fill="#dc2626" />
+        </g>
+      </g>
+
+      <!-- Ocean Water & Waves -->
+      <rect x="0" y="388" width="960" height="78" fill="url(#seaGrad)" />
+      <g id="oceanWaves" stroke="#7dd3fc" stroke-width="2" stroke-linecap="round" opacity="0.55" fill="none">
+        <path d="M 30 404 Q 55 399 80 404 T 130 404 M 240 415 Q 270 410 300 415 T 360 415 M 480 402 Q 510 397 540 402 T 600 402 M 710 416 Q 740 410 770 416 T 830 416" />
+        <path d="M 110 432 Q 145 426 180 432 T 250 432 M 390 428 Q 420 422 450 428 T 510 428 M 620 435 Q 655 429 690 435 T 760 435 M 850 426 Q 880 420 910 426" />
+      </g>
+
+      <!-- ================= 4. BOARDWALK & ROAD ================= -->
+      <!-- Wooden Railing & Posts (Parallax Scrolling) -->
+      <rect x="0" y="438" width="960" height="7" fill="#92400e" />
+      <rect x="0" y="454" width="960" height="6" fill="#78350f" />
+      <g id="boardwalkPosts" fill="#b45309" stroke="#78350f" stroke-width="1.5">
+        <rect x="40" y="425" width="14" height="45" rx="2" />
+        <rect x="200" y="425" width="14" height="45" rx="2" />
+        <rect x="360" y="425" width="14" height="45" rx="2" />
+        <rect x="520" y="425" width="14" height="45" rx="2" />
+        <rect x="680" y="425" width="14" height="45" rx="2" />
+        <rect x="840" y="425" width="14" height="45" rx="2" />
+      </g>
+
+      <!-- Curb & Road Surface -->
+      <rect x="0" y="465" width="960" height="10" fill="#cbd5e1" />
+      <rect x="0" y="473" width="960" height="127" fill="url(#roadGrad)" />
+
+      <!-- Scrolling Road Center Stripes -->
+      <g id="roadLines" fill="#fbbf24" opacity="0.88">
+        <rect x="20" y="532" width="90" height="8" rx="4" />
+        <rect x="210" y="532" width="90" height="8" rx="4" />
+        <rect x="400" y="532" width="90" height="8" rx="4" />
+        <rect x="590" y="532" width="90" height="8" rx="4" />
+        <rect x="780" y="532" width="90" height="8" rx="4" />
+        <rect x="970" y="532" width="90" height="8" rx="4" />
+      </g>
+
+      <!-- Ground Shadow beneath Bicycle -->
+      <ellipse id="bikeShadow" cx="465" cy="512" rx="245" ry="14" fill="#0f172a" opacity="0.55" />
+
+      <!-- ================= 5. PELICAN & BICYCLE RIG ================= -->
+      <g id="rigGroup">
+
+        <!-- ---- LAYER A: FAR CRANK, FAR LEG & FAR WING (Behind Bike Frame) ---- -->
+        <!-- Far Wing Reaching for Far Handlebar -->
+        <path id="farWing"
+              d="M 420 205 C 460 198, 515 215, 558 242 C 530 252, 475 245, 425 232 Z"
+              fill="#cbd5e1" stroke="#94a3b8" stroke-width="2" />
+
+        <!-- Far Crank Arm & Pedal -->
+        <line id="farCrank" x1="435" y1="422" x2="435" y2="376" stroke="#64748b" stroke-width="9" stroke-linecap="round" />
+
+        <!-- Far Pelican Leg (Thigh -> Knee -> Ankle -> Webbed Foot) -->
+        <g id="farLegGroup">
+          <!-- Feathered Upper Thigh -->
+          <line id="farThigh" x1="368" y1="262" x2="432" y2="318" stroke="url(#farLegGrad)" stroke-width="14" stroke-linecap="round" />
+          <path id="farThighFluff" d="M 352 252 Q 395 268 412 302 Q 375 305 352 272 Z" fill="#e2e8f0" />
+          <!-- Orange Lower Leg -->
+          <line id="farShin" x1="432" y1="318" x2="435" y2="376" stroke="url(#farLegGrad)" stroke-width="9.5" stroke-linecap="round" />
+          <circle id="farKnee" cx="432" cy="318" r="6.5" fill="#c2410c" />
+          <!-- Far Webbed Foot -->
+          <path id="farFoot" d="M 426 374 L 468 378 C 472 370, 462 362, 444 366 Z" fill="#c2410c" />
+          <!-- Far Pedal -->
+          <rect id="farPedal" x="418" y="374" width="36" height="8" rx="4" fill="#1e293b" stroke="#94a3b8" stroke-width="1.5" />
+        </g>
+
+        <!-- ---- LAYER B: BICYCLE WHEELS, DRIVETRAIN & FRAME ---- -->
+        <!-- Rear Wheel (Center: 295, 422) -->
+        <g id="rearWheel" transform="translate(295, 422)">
+          <use href="#wheelStructure" />
+        </g>
+
+        <!-- Front Wheel (Center: 635, 422) -->
+        <g id="frontWheel" transform="translate(635, 422)">
+          <use href="#wheelStructure" />
+        </g>
+
+        <!-- Rear & Front Fenders -->
+        <path d="M 205 415 A 90 90 0 0 1 378 386" fill="none" stroke="#0f766e" stroke-width="10" stroke-linecap="round" />
+        <path d="M 205 415 A 90 90 0 0 1 378 386" fill="none" stroke="#fef3c7" stroke-width="2" stroke-linecap="round" />
+        <path d="M 550 392 A 90 90 0 0 1 720 392" fill="none" stroke="#0f766e" stroke-width="10" stroke-linecap="round" />
+        <path d="M 550 392 A 90 90 0 0 1 720 392" fill="none" stroke="#fef3c7" stroke-width="2" stroke-linecap="round" />
+
+        <!-- Drive Chain & Rear Sprocket -->
+        <circle cx="295" cy="422" r="15" fill="#475569" stroke="#cbd5e1" stroke-width="3" />
+        <path id="bikeChain"
+              d="M 295 407 L 435 394 A 28 28 0 1 1 435 450 L 295 437 A 15 15 0 1 1 295 407 Z"
+              fill="none" stroke="#334155" stroke-width="4.5" stroke-dasharray="7 5" />
+
+        <!-- Bicycle Diamond Frame -->
+        <g id="bikeFrame" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <!-- Seatpost & Handlebar Stem (Chrome) -->
+          <line x1="372" y1="298" x2="356" y2="255" stroke="url(#chromeGrad)" stroke-width="9" />
+          <path d="M 584 282 L 572 232 C 568 220, 552 222, 535 232" stroke="url(#chromeGrad)" stroke-width="8.5" />
+
+          <!-- Main Teal Frame Tubes -->
+          <!-- Chainstay -->
+          <line x1="295" y1="422" x2="435" y2="422" stroke="url(#frameGrad)" stroke-width="11" />
+          <!-- Seatstay -->
+          <line x1="295" y1="422" x2="372" y2="298" stroke="url(#frameGrad)" stroke-width="9" />
+          <!-- Seat Tube -->
+          <line x1="435" y1="422" x2="372" y2="298" stroke="url(#frameGrad)" stroke-width="13" />
+          <!-- Down Tube -->
+          <path d="M 435 422 C 495 385, 545 345, 592 312" stroke="url(#frameGrad)" stroke-width="14" />
+          <!-- Top Tube (Cruiser graceful curve) -->
+          <path d="M 372 298 C 445 302, 515 296, 585 288" stroke="url(#frameGrad)" stroke-width="12" />
+          <!-- Head Tube -->
+          <line x1="582" y1="278" x2="595" y2="320" stroke="url(#frameGrad)" stroke-width="15" />
+          <!-- Front Fork -->
+          <path d="M 592 316 C 602 360, 616 392, 635 422" stroke="url(#frameGrad)" stroke-width="11" />
+
+          <!-- Frame Lug Accents & Cream Stripes -->
+          <circle cx="295" cy="422" r="8" fill="#f8fafc" />
+          <line x1="382" y1="316" x2="424" y2="398" stroke="#fef3c7" stroke-width="2" opacity="0.8" />
+        </g>
+
+        <!-- Woven Front Basket with a Little Fish Inside -->
+        <g id="frontBasket" transform="translate(592, 232)">
+          <!-- Fish Tail & Body peeking out of basket -->
+          <g id="basketFish" transform="translate(22, -6) rotate(18)">
+            <path d="M 0 12 C 6 -8, 22 -10, 26 8 Z" fill="#38bdf8" stroke="#0284c7" stroke-width="1.5" />
+            <polygon points="10,-5 2,-17 12,-13 21,-18 16,-5" fill="#0284c7" />
+          </g>
+          <!-- Basket Body -->
+          <path d="M 0 0 L 52 0 L 44 46 C 42 52, 36 55, 28 55 L 12 55 C 5 55, 2 50, 1 44 Z"
+                fill="url(#basketGrad)" stroke="#713f12" stroke-width="2" />
+          <!-- Woven Texture Lines -->
+          <path d="M 3 14 L 49 14 M 2 28 L 47 28 M 2 42 L 45 42 M 16 2 L 14 54 M 34 2 L 30 54"
+                stroke="#713f12" stroke-width="1.8" opacity="0.65" />
+          <rect x="-3" y="-3" width="58" height="7" rx="3.5" fill="#ca8a04" stroke="#713f12" stroke-width="1.8" />
+        </g>
+
+        <!-- Brass Bell on Handlebars -->
+        <g id="bikeBell" transform="translate(556, 214)">
+          <path d="M -9 6 A 9 9 0 0 1 9 6 Z" fill="#fbbf24" stroke="#b45309" stroke-width="1.5" />
+          <rect x="-10" y="5" width="20" height="3" rx="1.5" fill="#d97706" />
+          <!-- Bell Sound Waves (Animated when rung) -->
+          <g id="bellWaves" opacity="0" stroke="#fef08a" stroke-width="2.5" stroke-linecap="round" fill="none">
+            <path d="M -14 -4 Q -4 -14 8 -6" />
+            <path d="M -20 -9 Q -4 -23 14 -11" />
+          </g>
+        </g>
+
+        <!-- Leather Saddle -->
+        <path d="M 316 250 C 316 238, 342 242, 368 248 C 385 251, 392 257, 378 263 C 355 266, 326 266, 316 250 Z"
+              fill="#7c2d12" stroke="#431407" stroke-width="2.5" />
+        <circle cx="328" cy="254" r="2" fill="#fbbf24" />
+        <circle cx="338" cy="256" r="2" fill="#fbbf24" />
+
+        <!-- Crankset Spider / Chainring -->
+        <g id="chainringGroup" transform="translate(435, 422)">
+          <circle cx="0" cy="0" r="29" fill="#334155" stroke="#cbd5e1" stroke-width="3.5" />
+          <circle cx="0" cy="0" r="21" fill="none" stroke="#94a3b8" stroke-width="2" stroke-dasharray="8 6" />
+          <line x1="-24" y1="0" x2="24" y2="0" stroke="#cbd5e1" stroke-width="3.5" />
+          <line x1="0" y1="-24" x2="0" y2="24" stroke="#cbd5e1" stroke-width="3.5" />
+          <circle cx="0" cy="0" r="8" fill="#e2e8f0" />
+        </g>
+
+        <!-- ---- LAYER C: PELICAN BODY, TAIL, NECK, HEAD & BEAK ---- -->
+        <g id="pelicanTorsoGroup">
+          <!-- Tail Feathers (White & Slate-tipped primary tail feathers) -->
+          <g id="pelicanTail">
+            <path d="M 318 228 C 282 212, 255 218, 244 230 C 258 238, 278 242, 312 242 Z" fill="#475569" />
+            <path d="M 322 222 C 285 198, 258 198, 248 212 C 264 224, 286 232, 318 235 Z" fill="#64748b" />
+            <path d="M 332 220 C 296 196, 272 195, 262 208 C 276 222, 298 228, 326 234 Z" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1.5" />
+          </g>
+
+          <!-- Plump Pelican Body -->
+          <path d="M 315 224
+                   C 312 184, 355 162, 412 172
+                   C 452 178, 472 205, 456 238
+                   C 440 268, 392 272, 352 260
+                   C 326 252, 316 240, 315 224 Z"
+                fill="url(#bodyFeatherGrad)" stroke="#cbd5e1" stroke-width="2" />
+
+          <!-- Subtle Chest & Belly Feather Contour -->
+          <path d="M 418 188 C 444 202, 448 228, 428 248" fill="none" stroke="#e2e8f0" stroke-width="3" stroke-linecap="round" />
+          <path d="M 340 245 C 365 256, 402 256, 425 242" fill="none" stroke="#cbd5e1" stroke-width="2.5" stroke-linecap="round" />
+
+          <!-- Fluttering Red Cycling Scarf -->
+          <g id="scarfGroup">
+            <!-- Scarf Tails Streaming Back -->
+            <path id="scarfTail1"
+                  d="M 426 172 C 385 158, 345 162, 305 152 C 312 168, 340 178, 385 182 Z"
+                  fill="url(#scarfGrad)" />
+            <path id="scarfTail2"
+                  d="M 422 176 C 385 174, 352 184, 318 180 C 328 192, 362 195, 410 186 Z"
+                  fill="#b91c1c" />
+            <!-- Scarf Collar around Neck -->
+            <path d="M 416 165 C 432 172, 454 172, 466 164 C 468 175, 454 184, 434 184 C 418 183, 410 175, 416 165 Z"
+                  fill="#ef4444" stroke="#991b1b" stroke-width="1.5" />
+          </g>
+
+          <!-- Graceful S-Curved Pelican Neck -->
+          <path id="pelicanNeck"
+                d="M 418 175
+                   C 412 142, 424 112, 438 92
+                   L 468 98
+                   C 458 122, 452 148, 462 172 Z"
+                fill="url(#bodyFeatherGrad)" stroke="#cbd5e1" stroke-width="1.5" />
+
+          <!-- Pelican Head, Cap, Eye, Beak & Gular Pouch -->
+          <g id="pelicanHeadGroup" transform="translate(454, 88)">
+            <!-- Crest Feathers on Back of Head -->
+            <path d="M -18 -6 C -34 -14, -42 -6, -30 4 C -40 4, -42 14, -24 14 Z" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5" />
+
+            <!-- Head Dome -->
+            <ellipse cx="0" cy="4" rx="25" ry="21" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" />
+
+            <!-- Massive Iconic Pelican Throat Pouch (Gular Sac) -->
+            <path id="gularPouch"
+                  d="M 12 10
+                     C 26 56, 95 66, 148 34
+                     C 164 24, 174 12, 178 4
+                     L 18 4 Z"
+                  fill="url(#pouchGrad)" stroke="#b45309" stroke-width="2" stroke-linejoin="round" />
+
+            <!-- Pouch Stretch Folds / Texture Lines -->
+            <path id="pouchCrease1" d="M 34 15 C 48 40, 88 46, 132 25" fill="none" stroke="#d97706" stroke-width="1.8" stroke-linecap="round" opacity="0.65" />
+            <path id="pouchCrease2" d="M 55 12 C 68 28, 98 31, 142 16" fill="none" stroke="#b45309" stroke-width="1.5" stroke-linecap="round" opacity="0.45" />
+
+            <!-- Long Upper Mandible (Beak) with Hooked Coral Tip -->
+            <path id="upperBeak"
+                  d="M 14 -6
+                     C 58 -10, 125 -8, 175 -2
+                     C 186 0, 190 8, 184 15
+                     C 180 19, 174 16, 173 10
+                     C 122 8, 62 10, 12 10 Z"
+                  fill="url(#beakTopGrad)" stroke="#b45309" stroke-width="1.8" stroke-linejoin="round" />
+
+            <!-- Nostril & Beak Ridge Highlight -->
+            <path d="M 28 -2 L 155 1" stroke="#fef08a" stroke-width="2" stroke-linecap="round" opacity="0.75" />
+            <ellipse cx="38" cy="1" rx="3.5" ry="1.3" fill="#92400e" />
+
+            <!-- Cheek Patch & Eye Ring -->
+            <circle cx="8" cy="-2" r="9.5" fill="#fef08a" stroke="#f59e0b" stroke-width="1.2" />
+            <g id="pelicanEye">
+              <circle cx="8" cy="-2" r="6" fill="#ffffff" />
+              <circle cx="10" cy="-2" r="3.6" fill="#0f172a" />
+              <circle cx="11.2" cy="-3.5" r="1.4" fill="#ffffff" />
+            </g>
+            <!-- Blinking Eyelid -->
+            <ellipse id="pelicanEyelid" cx="8" cy="-2" rx="6.5" ry="0" fill="#fde047" />
+
+            <!-- Jaunty Striped Cycling Cap -->
+            <g transform="translate(-4, -15) rotate(-8)">
+              <!-- Flipped-up Cap Visor -->
+              <path d="M 10 -1 C 24 -10, 36 -6, 34 3 C 26 4, 16 3, 10 -1 Z" fill="#0284c7" stroke="#0369a1" stroke-width="1.5" />
+              <!-- Cap Crown -->
+              <path d="M -18 4 C -18 -14, 18 -14, 18 4 Z" fill="#f97316" stroke="#c2410c" stroke-width="1.5" />
+              <path d="M -6 -9 C -2 -10, 2 -10, 6 -9 L 8 4 L -8 4 Z" fill="#fef3c7" />
+              <circle cx="0" cy="-11" r="2.8" fill="#0284c7" />
+            </g>
+          </g>
+        </g>
+
+        <!-- ---- LAYER D: NEAR LEG, NEAR CRANK, NEAR PEDAL & NEAR WING ---- -->
+        <!-- Near Crank Arm (Rotates around 435, 422) -->
+        <line id="nearCrank" x1="435" y1="422" x2="435" y2="468" stroke="url(#chromeGrad)" stroke-width="9.5" stroke-linecap="round" />
+        <circle cx="435" cy="422" r="6" fill="#475569" />
+
+        <!-- Near Pelican Leg (2-Bone IK: Hip -> Knee -> Ankle -> Webbed Foot) -->
+        <g id="nearLegGroup">
+          <!-- Upper Leg / Thigh -->
+          <line id="nearThigh" x1="362" y1="255" x2="438" y2="352" stroke="url(#legGrad)" stroke-width="15" stroke-linecap="round" />
+          <!-- White Feathered Drumstick Cuff at Hip -->
+          <path id="nearThighFluff"
+                d="M 342 238 C 378 242, 405 272, 412 302 C 384 308, 355 292, 340 264 Z"
+                fill="url(#bodyFeatherGrad)" stroke="#cbd5e1" stroke-width="1.5" />
+          <!-- Knee Joint -->
+          <circle id="nearKnee" cx="438" cy="352" r="7" fill="#ea580c" />
+          <!-- Lower Leg / Shin -->
+          <line id="nearShin" x1="438" y1="352" x2="435" y2="468" stroke="url(#legGrad)" stroke-width="10" stroke-linecap="round" />
+          <!-- Large Orange Webbed Pelican Foot on Near Pedal -->
+          <path id="nearFoot"
+                d="M 426 465 L 474 470 C 478 460, 466 452, 444 456 Z"
+                fill="#f97316" stroke="#c2410c" stroke-width="1.8" stroke-linejoin="round" />
+          <!-- Near Pedal -->
+          <rect id="nearPedal" x="417" y="466" width="38" height="9" rx="4.5" fill="#0f172a" stroke="#f97316" stroke-width="2" />
+        </g>
+
+        <!-- Near Wing Extending from Shoulder to Handlebar Grip -->
+        <g id="nearWingGroup">
+          <!-- Near Handlebar Swept Bar & Grip -->
+          <path d="M 555 228 C 542 236, 532 242, 514 244" fill="none" stroke="url(#chromeGrad)" stroke-width="8" stroke-linecap="round" />
+          <rect x="498" y="238" width="28" height="11" rx="5.5" transform="rotate(6 512 244)" fill="#7c2d12" stroke="#431407" stroke-width="1.5" />
+
+          <!-- Articulated Wing Feathers Reaching Handlebar -->
+          <path id="nearWingMain"
+                d="M 378 198
+                   C 392 178, 434 188, 462 212
+                   C 482 228, 498 236, 516 242
+                   C 504 256, 474 256, 444 245
+                   C 408 232, 372 222, 378 198 Z"
+                fill="url(#wingFeatherGrad)" stroke="#cbd5e1" stroke-width="2" stroke-linejoin="round" />
+
+          <!-- Slate-Gray Primary Wingtip Feathers Wrapping Grip -->
+          <path id="nearWingTips"
+                d="M 476 224
+                   C 496 232, 514 236, 522 243
+                   C 518 253, 502 254, 482 248
+                   C 492 242, 490 234, 476 224 Z"
+                fill="#475569" stroke="#334155" stroke-width="1.5" stroke-linejoin="round" />
+
+          <!-- Wing Feather Layer Details -->
+          <path id="nearWingDetail"
+                d="M 395 208 Q 432 218 468 234 M 404 196 Q 440 208 475 224"
+                fill="none" stroke="#cbd5e1" stroke-width="2" stroke-linecap="round" />
+        </g>
+
+      </g>
+
+      <!-- ================= 6. FOREGROUND WIND & MOTION LINES ================= -->
+      <g id="windLines" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" opacity="0.55">
+        <line id="wind1" x1="720" y1="210" x2="795" y2="210" />
+        <line id="wind2" x1="160" y1="310" x2="225" y2="310" />
+        <line id="wind3" x1="690" y1="360" x2="750" y2="360" />
+      </g>
+    </svg>
+  </div>
+
+  <!-- Interactive Control Bar -->
+  <div class="controls">
+    <div class="title-group">
+      <span class="badge">2D SVG + IK</span>
+      <span>鹈鹕海滨骑行动画 (Pelican Riding a Bicycle)</span>
+    </div>
+    <div class="control-items">
+      <label class="slider-label">
+        <span>骑行速度</span>
+        <input id="speedSlider" type="range" min="0.2" max="2.5" step="0.1" value="1.0" />
+        <span id="speedValue">1.0x</span>
+      </label>
+      <button id="bellBtn" type="button">按响车铃</button>
+      <button id="toggleBtn" type="button">暂停</button>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      // Geometry Constants (in SVG viewBox 960x600 space)
+      const CRANK_X = 435;
+      const CRANK_Y = 422;
+      const CRANK_RADIUS = 46;
+
+      // Leg segment lengths for 2-Bone Inverse Kinematics
+      const L1 = 98;  // Thigh length (Hip to Knee)
+      const L2 = 102; // Shin length (Knee to Ankle/Pedal)
+
+      // DOM References
+      const rearWheel = document.getElementById('rearWheel');
+      const frontWheel = document.getElementById('frontWheel');
+      const chainringGroup = document.getElementById('chainringGroup');
+      const bikeChain = document.getElementById('bikeChain');
+      const bikeShadow = document.getElementById('bikeShadow');
+      const rigGroup = document.getElementById('rigGroup');
+
+      const nearCrank = document.getElementById('nearCrank');
+      const farCrank = document.getElementById('farCrank');
+      const nearPedal = document.getElementById('nearPedal');
+      const farPedal = document.getElementById('farPedal');
+
+      const nearThigh = document.getElementById('nearThigh');
+      const nearThighFluff = document.getElementById('nearThighFluff');
+      const nearKnee = document.getElementById('nearKnee');
+      const nearShin = document.getElementById('nearShin');
+      const nearFoot = document.getElementById('nearFoot');
+
+      const farThigh = document.getElementById('farThigh');
+      const farThighFluff = document.getElementById('farThighFluff');
+      const farKnee = document.getElementById('farKnee');
+      const farShin = document.getElementById('farShin');
+      const farFoot = document.getElementById('farFoot');
+
+      const pelicanTorsoGroup = document.getElementById('pelicanTorsoGroup');
+      const pelicanHeadGroup = document.getElementById('pelicanHeadGroup');
+      const pelicanTail = document.getElementById('pelicanTail');
+      const gularPouch = document.getElementById('gularPouch');
+      const upperBeak = document.getElementById('upperBeak');
+      const pelicanEyelid = document.getElementById('pelicanEyelid');
+      const scarfTail1 = document.getElementById('scarfTail1');
+      const scarfTail2 = document.getElementById('scarfTail2');
+
+      const nearWingMain = document.getElementById('nearWingMain');
+      const nearWingDetail = document.getElementById('nearWingDetail');
+      const farWing = document.getElementById('farWing');
+      const basketFish = document.getElementById('basketFish');
+      const bellWaves = document.getElementById('bellWaves');
+
+      const roadLines = Array.from(document.querySelectorAll('#roadLines rect'));
+      const boardwalkPosts = Array.from(document.querySelectorAll('#boardwalkPosts rect'));
+      const clouds = [
+        { el: document.getElementById('cloud1'), x: 170, y: 95, scale: 1.1, speed: 18 },
+        { el: document.getElementById('cloud2'), x: 520, y: 72, scale: 0.75, speed: 12 },
+        { el: document.getElementById('cloud3'), x: 830, y: 145, scale: 0.92, speed: 15 }
+      ];
+      const windEls = [
+        { el: document.getElementById('wind1'), x: 720, y: 210, len: 75, speed: 420 },
+        { el: document.getElementById('wind2'), x: 160, y: 310, len: 65, speed: 480 },
+        { el: document.getElementById('wind3'), x: 690, y: 360, len: 60, speed: 390 }
+      ];
+
+      // State
+      let isPlaying = true;
+      let speedMultiplier = 1.0;
+      let crankAngle = 0.8; // radians
+      let wheelAngle = 0;   // degrees
+      let roadScroll = 0;
+      let postScroll = 0;
+      let bellTimer = 0;
+      let lastTime = performance.now();
+
+      /**
+       * Analytical 2-Bone Inverse Kinematics Solver
+       * Finds the knee position (kx, ky) given hip (hx, hy) and ankle/target (tx, ty)
+       * bending forward (rightward in viewBox) as a bird/human knee bends on a bike.
+       */
+      function solveLegIK(hx, hy, tx, ty, l1, l2) {
+        const dx = tx - hx;
+        const dy = ty - hy;
+        let dist = Math.hypot(dx, dy);
+
+        // Clamp reach so limbs never disconnect
+        const maxReach = l1 + l2 - 1;
+        const minReach = Math.abs(l1 - l2) + 1;
+        dist = Math.max(minReach, Math.min(maxReach, dist));
+
+        const cosAngle = (l1 * l1 + dist * dist - l2 * l2) / (2 * l1 * dist);
+        const clampedCos = Math.max(-1, Math.min(1, cosAngle));
+        const baseAngle = Math.atan2(dy, dx);
+        const kneeOffsetAngle = Math.acos(clampedCos);
+
+        // Subtract offset angle so knee points forward (toward handlebars, +X)
+        const thighAngle = baseAngle - kneeOffsetAngle;
+
+        return {
+          kx: hx + l1 * Math.cos(thighAngle),
+          ky: hy + l1 * Math.sin(thighAngle),
+          thighAngle
+        };
+      }
+
+      function updateLegDOM(hipX, hipY, pedalX, pedalY, refs, isNear) {
+        // Offset ankle slightly above pedal center
+        const ankleX = pedalX - 6;
+        const ankleY = pedalY - 4;
+
+        const { kx, ky } = solveLegIK(hipX, hipY, ankleX, ankleY, L1, L2);
+
+        refs.thigh.setAttribute('x1', hipX.toFixed(1));
+        refs.thigh.setAttribute('y1', hipY.toFixed(1));
+        refs.thigh.setAttribute('x2', kx.toFixed(1));
+        refs.thigh.setAttribute('y2', ky.toFixed(1));
+
+        refs.knee.setAttribute('cx', kx.toFixed(1));
+        refs.knee.setAttribute('cy', ky.toFixed(1));
+
+        refs.shin.setAttribute('x1', kx.toFixed(1));
+        refs.shin.setAttribute('y1', ky.toFixed(1));
+        refs.shin.setAttribute('x2', ankleX.toFixed(1));
+        refs.shin.setAttribute('y2', ankleY.toFixed(1));
+
+        // Feathered upper thigh cuff follows upper half of thigh
+        const midX = hipX + (kx - hipX) * 0.56;
+        const midY = hipY + (ky - hipY) * 0.56;
+        const perpX = -(ky - hipY) * 0.24;
+        const perpY = (kx - hipX) * 0.24;
+
+        refs.fluff.setAttribute(
+          'd',
+          `M ${(hipX - 18).toFixed(1)} ${(hipY - 14).toFixed(1)} ` +
+          `Q ${(hipX + perpX + 12).toFixed(1)} ${(hipY + perpY - 6).toFixed(1)} ${(midX + perpX * 0.7).toFixed(1)} ${(midY + perpY * 0.7).toFixed(1)} ` +
+          `Q ${midX.toFixed(1)} ${(midY + 12).toFixed(1)} ${(hipX - 20).toFixed(1)} ${(hipY + 10).toFixed(1)} Z`
+        );
+
+        // Webbed foot planted on pedal with subtle ankle tilt
+        const footTilt = Math.sin(crankAngle + (isNear ? 0 : Math.PI)) * 4;
+        const toeX = pedalX + 26;
+        const toeY = pedalY - 2 + footTilt;
+        const heelX = pedalX - 14;
+        const heelY = pedalY - 3;
+
+        refs.foot.setAttribute(
+          'd',
+          `M ${heelX.toFixed(1)} ${heelY.toFixed(1)} ` +
+          `L ${toeX.toFixed(1)} ${(toeY + 2).toFixed(1)} ` +
+          `C ${(toeX + 5).toFixed(1)} ${(toeY - 9).toFixed(1)}, ${(pedalX + 12).toFixed(1)} ${(pedalY - 17).toFixed(1)}, ${ankleX.toFixed(1)} ${(ankleY - 6).toFixed(1)} Z`
+        );
+      }
+
+      function renderFrame(now) {
+        const dt = Math.min(0.05, (now - lastTime) / 1000);
+        lastTime = now;
+
+        if (isPlaying) {
+          const angularVel = 4.2 * speedMultiplier; // rad/s
+          crankAngle = (crankAngle + angularVel * dt) % (Math.PI * 2);
+          wheelAngle = (wheelAngle + (angularVel * 180 / Math.PI) * 1.45 * dt) % 360;
+
+          const linearSpeed = 250 * speedMultiplier;
+          roadScroll = (roadScroll + linearSpeed * dt) % 190;
+          postScroll = (postScroll + linearSpeed * 0.55 * dt) % 160;
+
+          if (bellTimer > 0) {
+            bellTimer = Math.max(0, bellTimer - dt);
+          }
+
+          // Advance clouds & wind
+          for (const c of clouds) {
+            c.x -= c.speed * speedMultiplier * dt;
+            if (c.x < -120) c.x = 1080;
+            c.el.setAttribute('transform', `translate(${c.x.toFixed(1)}, ${c.y}) scale(${c.scale})`);
+          }
+
+          for (const w of windEls) {
+            w.x -= w.speed * speedMultiplier * dt;
+            if (w.x < -100) w.x = 1020;
+            w.el.setAttribute('x1', w.x.toFixed(1));
+            w.el.setAttribute('x2', (w.x + w.len).toFixed(1));
+          }
+        }
+
+        // 1. Road Stripes & Boardwalk Posts Parallax
+        roadLines.forEach((rect, i) => {
+          const x = i * 190 - roadScroll;
+          rect.setAttribute('x', x.toFixed(1));
+        });
+
+        boardwalkPosts.forEach((post, i) => {
+          let x = i * 160 - postScroll;
+          if (x < -20) x += 960;
+          post.setAttribute('x', x.toFixed(1));
+        });
+
+        // 2. Wheels, Chainring & Chain
+        rearWheel.setAttribute('transform', `translate(295, 422) rotate(${wheelAngle.toFixed(1)})`);
+        frontWheel.setAttribute('transform', `translate(635, 422) rotate(${wheelAngle.toFixed(1)})`);
+        chainringGroup.setAttribute('transform', `translate(${CRANK_X}, ${CRANK_Y}) rotate(${(crankAngle * 180 / Math.PI).toFixed(1)})`);
+        bikeChain.setAttribute('stroke-dashoffset', (-(crankAngle * 35)).toFixed(1));
+
+        // Subtle whole-bike suspension bounce
+        const bikeBounce = Math.sin(crankAngle * 2) * 1.8;
+        rigGroup.setAttribute('transform', `translate(0, ${bikeBounce.toFixed(2)})`);
+        bikeShadow.setAttribute('rx', (245 - bikeBounce * 3).toFixed(1));
+
+        // 3. Pedals & Crank Arms (180 degrees apart)
+        const nearPedalX = CRANK_X + CRANK_RADIUS * Math.cos(crankAngle);
+        const nearPedalY = CRANK_Y + CRANK_RADIUS * Math.sin(crankAngle);
+
+        const farAngle = crankAngle + Math.PI;
+        const farPedalX = CRANK_X + CRANK_RADIUS * Math.cos(farAngle);
+        const farPedalY = CRANK_Y + CRANK_RADIUS * Math.sin(farAngle);
+
+        nearCrank.setAttribute('x2', nearPedalX.toFixed(1));
+        nearCrank.setAttribute('y2', nearPedalY.toFixed(1));
+        nearPedal.setAttribute('x', (nearPedalX - 19).toFixed(1));
+        nearPedal.setAttribute('y', (nearPedalY - 4.5).toFixed(1));
+
+        farCrank.setAttribute('x2', farPedalX.toFixed(1));
+        farCrank.setAttribute('y2', farPedalY.toFixed(1));
+        farPedal.setAttribute('x', (farPedalX - 18).toFixed(1));
+        farPedal.setAttribute('y', (farPedalY - 4).toFixed(1));
+
+        // 4. Pelican Body Bobbing & Pitching (2 cycles per crank revolution)
+        const torsoBobY = Math.sin(crankAngle * 2 - 0.5) * 6.5;
+        const torsoPitch = Math.cos(crankAngle * 2) * 2.2;
+        pelicanTorsoGroup.setAttribute(
+          'transform',
+          `translate(0, ${torsoBobY.toFixed(2)}) rotate(${torsoPitch.toFixed(2)} 375 235)`
+        );
+
+        // 5. Solve 2-Bone IK for Both Pelican Legs
+        const nearHipX = 362;
+        const nearHipY = 248 + torsoBobY;
+        updateLegDOM(nearHipX, nearHipY, nearPedalX, nearPedalY, {
+          thigh: nearThigh,
+          fluff: nearThighFluff,
+          knee: nearKnee,
+          shin: nearShin,
+          foot: nearFoot
+        }, true);
+
+        const farHipX = 370;
+        const farHipY = 252 + torsoBobY;
+        updateLegDOM(farHipX, farHipY, farPedalX, farPedalY, {
+          thigh: farThigh,
+          fluff: farThighFluff,
+          knee: farKnee,
+          shin: farShin,
+          foot: farFoot
+        }, false);
+
+        // 6. Wing Articulation (Shoulder moves with torso, wingtip stays on handlebar grip)
+        const shoulderY = 198 + torsoBobY;
+        const elbowDrop = Math.sin(crankAngle * 2) * 5;
+        nearWingMain.setAttribute(
+          'd',
+          `M 378 ${shoulderY.toFixed(1)} ` +
+          `C 392 ${(178 + torsoBobY * 0.7).toFixed(1)}, 434 ${(188 + elbowDrop).toFixed(1)}, 462 ${(212 + elbowDrop * 0.5).toFixed(1)} ` +
+          `C 482 228, 498 236, 516 242 ` +
+          `C 504 256, 474 ${(256 + elbowDrop * 0.6).toFixed(1)}, 444 ${(245 + elbowDrop).toFixed(1)} ` +
+          `C 408 ${(232 + torsoBobY * 0.8).toFixed(1)}, 372 ${(222 + torsoBobY).toFixed(1)}, 378 ${shoulderY.toFixed(1)} Z`
+        );
+        nearWingDetail.setAttribute(
+          'd',
+          `M 395 ${(208 + torsoBobY * 0.8).toFixed(1)} Q 432 ${(218 + elbowDrop).toFixed(1)} 468 234 ` +
+          `M 404 ${(196 + torsoBobY * 0.8).toFixed(1)} Q 440 ${(208 + elbowDrop).toFixed(1)} 475 224`
+        );
+        farWing.setAttribute(
+          'd',
+          `M 420 ${(205 + torsoBobY * 0.8).toFixed(1)} C 460 ${(198 - elbowDrop * 0.5).toFixed(1)}, 515 215, 558 242 C 530 252, 475 245, 425 ${(232 + torsoBobY * 0.8).toFixed(1)} Z`
+        );
+
+        // 7. Secondary Motion: Head, Gular Pouch Jiggle, Tail Wag & Scarf Flutter
+        const headNod = Math.sin(crankAngle * 2 - 1.2) * 3.2;
+        pelicanHeadGroup.setAttribute('transform', `translate(454, 88) rotate(${headNod.toFixed(2)})`);
+
+        // Iconic Gular Pouch elastic wobble (amplified when bell rings!)
+        const bellExcite = bellTimer > 0 ? Math.sin(now * 0.035) * 14 : 0;
+        const pouchDrop = 58 + Math.sin(crankAngle * 2 - 1.7) * 9 + bellExcite;
+        const pouchMidDrop = 66 + Math.cos(crankAngle * 2 - 1.3) * 8 + bellExcite * 0.8;
+        gularPouch.setAttribute(
+          'd',
+          `M 12 10 ` +
+          `C 26 ${pouchDrop.toFixed(1)}, 95 ${pouchMidDrop.toFixed(1)}, 148 34 ` +
+          `C 164 24, 174 12, 178 4 ` +
+          `L 18 4 Z`
+        );
+
+        // Open upper beak cheerfully when ringing the bell
+        const beakOpenAngle = bellTimer > 0 ? -9 * Math.abs(Math.sin(now * 0.02)) : 0;
+        upperBeak.setAttribute('transform', `rotate(${beakOpenAngle.toFixed(1)} 16 2)`);
+        bellWaves.setAttribute('opacity', bellTimer > 0 ? (0.4 + 0.6 * Math.abs(Math.sin(now * 0.025))).toFixed(2) : '0');
+
+        // Tail feathers & Scarf flutter
+        const tailWag = Math.sin(crankAngle * 2 - 0.9) * 5;
+        pelicanTail.setAttribute('transform', `rotate(${tailWag.toFixed(2)} 325 230)`);
+
+        const scarfWave1 = Math.sin(now * 0.012 * speedMultiplier) * 9;
+        const scarfWave2 = Math.cos(now * 0.012 * speedMultiplier) * 8;
+        scarfTail1.setAttribute(
+          'd',
+          `M 426 172 C 385 ${(158 + scarfWave1).toFixed(1)}, 345 ${(162 - scarfWave2).toFixed(1)}, 302 ${(150 + scarfWave2).toFixed(1)} ` +
+          `C 312 ${(168 + scarfWave2).toFixed(1)}, 340 ${(178 - scarfWave1 * 0.5).toFixed(1)}, 385 182 Z`
+        );
+        scarfTail2.setAttribute(
+          'd',
+          `M 422 176 C 385 ${(174 - scarfWave2).toFixed(1)}, 352 ${(184 + scarfWave1).toFixed(1)}, 315 ${(182 - scarfWave1).toFixed(1)} ` +
+          `C 328 ${(194 - scarfWave1).toFixed(1)}, 362 ${(195 + scarfWave2 * 0.5).toFixed(1)}, 410 186 Z`
+        );
+
+        // Little fish in front basket wiggling tail
+        const fishHop = Math.sin(crankAngle * 2) * 2.5;
+        const fishTilt = 18 + Math.cos(now * 0.008) * 6;
+        basketFish.setAttribute('transform', `translate(22, ${(-6 + fishHop).toFixed(1)}) rotate(${fishTilt.toFixed(1)})`);
+
+        // Periodic natural eye blink every ~3.8 seconds
+        const blinkCycle = (now % 3800);
+        const eyelidRy = (blinkCycle > 3640 && blinkCycle < 3780) ? 6.5 : 0;
+        pelicanEyelid.setAttribute('ry', eyelidRy);
+
+        requestAnimationFrame(renderFrame);
+      }
+
+      // UI Controls
+      const speedSlider = document.getElementById('speedSlider');
+      const speedValue = document.getElementById('speedValue');
+      const toggleBtn = document.getElementById('toggleBtn');
+      const bellBtn = document.getElementById('bellBtn');
+
+      speedSlider.addEventListener('input', (e) => {
+        speedMultiplier = parseFloat(e.target.value);
+        speedValue.textContent = speedMultiplier.toFixed(1) + 'x';
+      });
+
+      toggleBtn.addEventListener('click', () => {
+        isPlaying = !isPlaying;
+        toggleBtn.textContent = isPlaying ? '暂停' : '继续';
+      });
+
+      bellBtn.addEventListener('click', () => {
+        bellTimer = 1.1;
+      });
+
+      requestAnimationFrame(renderFrame);
+    })();
+  </script>
+</body>
+</html>

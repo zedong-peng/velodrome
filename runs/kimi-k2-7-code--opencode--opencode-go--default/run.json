@@ -1,0 +1,40 @@
+{
+  "route": {
+    "harness": "opencode",
+    "provider": "opencode-go",
+    "model": "kimi-k2.7-code",
+    "effort": "default",
+    "api": "chat"
+  },
+  "attempt": 1,
+  "harness_version": "1.19.4",
+  "harbor_version": "0.24.0",
+  "task_checksum": "c8d5a14595e67070e518bf851e92c6fb736f6b66c17d05d9c6a2be96c91f0e1f",
+  "started_at": "2026-10-23T23:31:05.332810Z",
+  "agent_seconds": 99.8,
+  "steps": 3,
+  "tokens": {
+    "input": 18941,
+    "cache": 13056,
+    "output": 5648
+  },
+  "list_cost_usd": 0.0307,
+  "harness_cost_usd": 0.03066339,
+  "exception": "NonZeroAgentExitCodeError",
+  "verdict": {
+    "file": "pelican_bike.html",
+    "bytes": 5665,
+    "drawn": true,
+    "moving": true,
+    "svgs": 1,
+    "shapes": 65,
+    "motion": [
+      0.0279,
+      0.0262,
+      0.0315
+    ],
+    "errors": 0,
+    "blocked_requests": 0,
+    "render_error": null
+  }
+}

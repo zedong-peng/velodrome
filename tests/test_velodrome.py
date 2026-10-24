@@ -72,6 +72,11 @@ class Routes(unittest.TestCase):
         self.assertIsNone(velodrome.list_cost({"input": None}, price))
 
 
+    def test_oauth_flag_stays_out_of_scrubbed_agent_settings(self):
+        plan = velodrome.connect(SAMPLES[0], CATALOG, {})
+        self.assertNotIn("CLAUDE_FORCE_OAUTH", plan["env"])
+        self.assertEqual(plan["process_env"], {"CLAUDE_FORCE_OAUTH": "1"})
+
     def test_harness_version_is_passed_on(self):
         route = {"harness": "opencode", "provider": "opencode-go", "model": "kimi-k3", "effort": "max", "version": "1.19.3"}
         plan = velodrome.connect(route, CATALOG, {})

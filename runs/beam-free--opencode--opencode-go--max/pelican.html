@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<title>Pelican on Bicycle</title>
+<style>
+  body { margin:0; background:#87ceeb; display:flex; justify-content:center; align-items:center; height:100vh; }
+  svg { width:90%; max-width:900px; height:auto; }
+</style>
+</head>
+<body>
+<svg id="scene" viewBox="0 0 900 450" xmlns="http://www.w3.org/2000/svg">
+  <!-- sky -->
+  <rect x="0" y="0" width="900" height="450" fill="#87ceeb"/>
+  <!-- sun -->
+  <circle cx="780" cy="70" r="40" fill="#ffd700"/>
+  <!-- ground -->
+  <rect x="0" y="360" width="900" height="90" fill="#7ec850"/>
+  <line x1="0" y1="360" x2="900" y2="360" stroke="#5aa030" stroke-width="3"/>
+
+  <!-- bicycle -->
+  <g id="bike">
+    <!-- rear wheel -->
+    <g id="rw" transform="rotate(0 200 300)">
+      <circle cx="200" cy="300" r="55" fill="none" stroke="#333" stroke-width="4"/>
+      <circle cx="200" cy="300" r="6" fill="#333"/>
+      <g id="rspokes">
+        <line x1="200" y1="245" x2="200" y2="355" stroke="#666" stroke-width="2"/>
+        <line x1="145" y1="300" x2="255" y2="300" stroke="#666" stroke-width="2"/>
+        <line x1="161" y1="261" x2="239" y2="339" stroke="#666" stroke-width="2"/>
+        <line x1="239" y1="261" x2="161" y2="339" stroke="#666" stroke-width="2"/>
+      </g>
+    </g>
+    <!-- front wheel -->
+    <g id="fw" transform="rotate(0 430 300)">
+      <circle cx="430" cy="300" r="55" fill="none" stroke="#333" stroke-width="4"/>
+      <circle cx="430" cy="300" r="6" fill="#333"/>
+      <g>
+        <line x1="430" y1="245" x2="430" y2="355" stroke="#666" stroke-width="2"/>
+        <line x1="375" y1="300" x2="485" y2="300" stroke="#666" stroke-width="2"/>
+        <line x1="391" y1="261" x2="469" y2="339" stroke="#666" stroke-width="2"/>
+        <line x1="469" y1="261" x2="391" y2="339" stroke="#666" stroke-width="2"/>
+      </g>
+    </g>
+    <!-- frame -->
+    <g stroke="#c0392b" stroke-width="5" fill="none" stroke-linecap="round">
+      <line x1="225" y1="190" x2="290" y2="295"/><!-- seat tube -->
+      <line x1="230" y1="188" x2="375" y2="205"/><!-- top tube -->
+      <line x1="375" y1="205" x2="375" y2="235"/><!-- head tube -->
+      <line x1="375" y1="235" x2="290" y2="295"/><!-- down tube -->
+      <line x1="290" y1="295" x2="200" y2="300"/><!-- chain stay -->
+      <line x1="225" y1="190" x2="200" y2="300"/><!-- seat stay -->
+      <line x1="375" y1="235" x2="430" y2="300"/><!-- fork -->
+    </g>
+    <!-- seat -->
+    <rect x="210" y="182" width="30" height="8" rx="4" fill="#333"/>
+    <!-- handlebar -->
+    <g stroke="#333" stroke-width="4" fill="none" stroke-linecap="round">
+      <line x1="375" y1="205" x2="400" y2="195"/>
+      <line x1="390" y1="195" x2="415" y2="195"/>
+    </g>
+    <!-- crank -->
+    <g id="crank" transform="rotate(0 290 295)">
+      <line x1="290" y1="295" x2="325" y2="295" stroke="#555" stroke-width="4"/>
+      <circle cx="325" cy="295" r="6" fill="#333"/>
+      <line x1="290" y1="295" x2="255" y2="295" stroke="#555" stroke-width="4"/>
+      <circle cx="255" cy="295" r="6" fill="#333"/>
+    </g>
+  </g>
+
+  <!-- pelican -->
+  <g id="pelican" transform="translate(230,165)">
+    <!-- body -->
+    <ellipse cx="0" cy="0" rx="55" ry="38" fill="#f5f5f5" stroke="#bbb" stroke-width="2"/>
+    <!-- wing -->
+    <g id="wing">
+      <path d="M -10 -5 Q -40 -20 -55 10 Q -45 30 -10 15 Z" fill="#e0e0e0" stroke="#bbb" stroke-width="2"/>
+    </g>
+    <!-- neck -->
+    <path d="M 30 -20 Q 55 -50 60 -70" fill="none" stroke="#f5f5f5" stroke-width="16" stroke-linecap="round"/>
+    <path d="M 30 -20 Q 55 -50 60 -70" fill="none" stroke="#bbb" stroke-width="2" stroke-linecap="round"/>
+    <!-- head -->
+    <circle cx="62" cy="-78" r="22" fill="#f5f5f5" stroke="#bbb" stroke-width="2"/>
+    <!-- eye -->
+    <circle cx="70" cy="-82" r="4" fill="#333"/>
+    <circle cx="71" cy="-83" r="1.5" fill="#fff"/>
+    <!-- beak upper -->
+    <path d="M 80 -78 L 150 -70 L 82 -68 Z" fill="#f4a460" stroke="#c67a3a" stroke-width="2"/>
+    <!-- beak lower / pouch -->
+    <path d="M 82 -68 Q 110 -55 148 -70 L 80 -78 Z" fill="#deb887" stroke="#c67a3a" stroke-width="2"/>
+    <!-- legs -->
+    <g id="legs">
+      <polyline id="legL" points="0,0 0,0 0,0" fill="none" stroke="#f4a460" stroke-width="4" stroke-linecap="round"/>
+      <polyline id="legR" points="0,0 0,0 0,0" fill="none" stroke="#f4a460" stroke-width="4" stroke-linecap="round"/>
+    </g>
+  </g>
+</svg>
+<script>
+const bb = {x:290, y:295};
+const hipL = {x:230-8, y:165+35}; // world base
+const hipR = {x:230+8, y:165+35};
+// local offsets from body center:
+const hipLOff = {x:-8, y:35};
+const hipROff = {x:8, y:35};
+const L1=42, L2=42;
+let angle = 0;
+let last = performance.now();
+const pelican = document.getElementById('pelican');
+const crank = document.getElementById('crank');
+const rw = document.getElementById('rw');
+const fw = document.getElementById('fw');
+const legL = document.getElementById('legL');
+const legR = document.getElementById('legR');
+const wing = document.getElementById('wing');
+
+function ik(hip, target, bend) {
+  const dx = target.x-hip.x, dy=target.y-hip.y;
+  const d = Math.hypot(dx,dy);
+  const dd = Math.min(d, L1+L2-0.5);
+  const a = Math.atan2(dy,dx);
+  const cosK = (L1*L1 + dd*dd - L2*L2)/(2*L1*dd);
+  const kneeAmp = Math.acos(Math.max(-1,Math.min(1,cosK)));
+  const hipAng = a + bend*kneeAmp;
+  const knee = {x: hip.x + L1*Math.cos(hipAng), y: hip.y + L1*Math.sin(hipAng)};
+  return knee;
+}
+
+function tick(now){
+  const dt = (now-last)/1000; last=now;
+  const speed = 4; // rad/s
+  angle += speed*dt;
+  // wheel & crank rotation
+  const deg = angle*180/Math.PI;
+  rw.setAttribute('transform', `rotate(${deg} 200 300)`);
+  fw.setAttribute('transform', `rotate(${deg} 430 300)`);
+  crank.setAttribute('transform', `rotate(${deg} 290 295)`);
+  // body bob
+  const bob = Math.sin(angle*2)*3;
+  const px = 230, py = 165 + bob;
+  pelican.setAttribute('transform', `translate(${px},${py})`);
+  // wing flap
+  const flap = Math.sin(angle*3)*8;
+  wing.setAttribute('transform', `rotate(${flap} -10 -5)`);
+  // pedals world positions
+  const r=35;
+  const p1 = {x: bb.x + r*Math.cos(angle), y: bb.y + r*Math.sin(angle)};
+  const p2 = {x: bb.x + r*Math.cos(angle+Math.PI), y: bb.y + r*Math.sin(angle+Math.PI)};
+  // hips world
+  const hL = {x: px + hipLOff.x, y: py + hipLOff.y};
+  const hR = {x: px + hipROff.x, y: py + hipROff.y};
+  // left leg bend: knee to left (negative)
+  const kneeL = ik(hL, p1, -1);
+  const kneeR = ik(hR, p2, +1);
+  legL.setAttribute('points', `${hL.x-px},${hL.y-py} ${kneeL.x-px},${kneeL.y-py} ${p1.x-px},${p1.y-py}`);
+  legR.setAttribute('points', `${hR.x-px},${hR.y-py} ${kneeR.x-px},${kneeR.y-py} ${p2.x-px},${p2.y-py}`);
+  requestAnimationFrame(tick);
+}
+requestAnimationFrame(tick);
+</script>
+</body>
+</html>

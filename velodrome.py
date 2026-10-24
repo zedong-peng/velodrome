@@ -129,10 +129,13 @@ def connect(route, catalog, keys):
     if f"{var}_{api.upper()}" in keys:
         var = f"{var}_{api.upper()}"
     key = "${" + var + "}"
-    kwargs, env = {}, {}
+    kwargs, env, process_env = {}, {}, {}
 
     if provider.get("login") == "claude-oauth":
-        env = {"CLAUDE_CODE_OAUTH_TOKEN": key, "CLAUDE_FORCE_OAUTH": "1"}
+        env = {"CLAUDE_CODE_OAUTH_TOKEN": key}
+        # Harbor scrubs the values of secret-looking agent settings from the trial files, and "1" is
+        # everywhere; the flag goes in Harbor's own environment instead, which it also reads.
+        process_env = {"CLAUDE_FORCE_OAUTH": "1"}
         arg = f"anthropic/{model}"
     elif harness == "opencode" and pid == "opencode-go":
         env = {"OPENCODE_API_KEY": key}
@@ -182,7 +185,7 @@ def connect(route, catalog, keys):
         kwargs["version"] = route["version"]  # the harness version to install; latest when unset
 
     hosts = sorted({urlsplit(base).hostname})
-    return {"api": api, "model": arg, "kwargs": kwargs, "env": env, "hosts": hosts}
+    return {"api": api, "model": arg, "kwargs": kwargs, "env": env, "process_env": process_env, "hosts": hosts}
 
 
 def load_keys():
@@ -416,6 +419,7 @@ def run_one(route, attempt, catalog, keys, dry_run):
     # Some Harbor adapters read os.environ instead of the agent env; each route has
     # its own Harbor process, so its settings can live there too.
     env |= {k: env[v[2:-1]] if v.startswith("${") else v for k, v in plan["env"].items()}
+    env |= plan["process_env"]
 
     JOBS.mkdir(exist_ok=True)
     say(f"start {slug}")
@@ -425,7 +429,11 @@ def run_one(route, attempt, catalog, keys, dry_run):
     if not trials:
         say(f"fail  {slug}: Harbor left no trial, see jobs/{job_name}.log")
         return
-    imported = import_trial(trials[0], route, plan, catalog, attempt)
+    try:
+        imported = import_trial(trials[0], route, plan, catalog, attempt)
+    except (OSError, ValueError, KeyError) as exc:
+        say(f"fail  {slug}: could not import {trials[0].relative_to(ROOT)} ({exc})")
+        return
     if imported:
         verdict = json.loads((RUNS / imported / "run.json").read_text())["verdict"]
         state = "moving" if verdict["moving"] else "drawn" if verdict["drawn"] else "no drawing"

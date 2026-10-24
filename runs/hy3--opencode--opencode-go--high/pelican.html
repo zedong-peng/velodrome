@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<title>鹈鹕骑自行车</title>
+<style>
+  body { margin: 0; background: #cfeefc; display: flex; justify-content: center; align-items: center; height: 100vh; }
+  svg { width: 600px; height: 400px; }
+</style>
+</head>
+<body>
+<svg viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg">
+  <!-- 天空地面 -->
+  <rect x="0" y="320" width="600" height="80" fill="#9bd17a"/>
+
+  <!-- 移动的云 -->
+  <g fill="#ffffff" opacity="0.9">
+    <g>
+      <ellipse cx="0" cy="70" rx="40" ry="20"/>
+      <ellipse cx="35" cy="60" rx="30" ry="22"/>
+      <ellipse cx="-30" cy="60" rx="25" ry="18"/>
+      <animateTransform attributeName="transform" type="translate" from="650 0" to="-120 0" dur="12s" repeatCount="indefinite"/>
+    </g>
+  </g>
+
+  <!-- 整个自行车+鹈鹕随地面往前移动（模拟骑行） -->
+  <g>
+    <animateTransform attributeName="transform" type="translate" values="0 0; 20 0; 0 0" dur="0.8s" repeatCount="indefinite"/>
+
+    <!-- 自行车 -->
+    <g stroke="#333" stroke-width="5" fill="none">
+      <!-- 后轮 -->
+      <circle cx="200" cy="300" r="45" fill="#fff"/>
+      <!-- 前轮 -->
+      <circle cx="360" cy="300" r="45" fill="#fff"/>
+      <!-- 车架 -->
+      <path d="M200 300 L260 240 L330 240 M260 240 L300 300 L360 300 M300 300 L330 240"/>
+      <!-- 车座立管 -->
+      <path d="M260 240 L250 215"/>
+      <!-- 车把立管 -->
+      <path d="M330 240 L350 210"/>
+      <!-- 车把 -->
+      <path d="M335 210 L368 205"/>
+      <!-- 车座 -->
+      <path d="M235 213 L268 213"/>
+    </g>
+
+    <!-- 车轮辐条旋转 -->
+    <g>
+      <g stroke="#999" stroke-width="2">
+        <line x1="200" y1="255" x2="200" y2="345"/>
+        <line x1="155" y1="300" x2="245" y2="300"/>
+        <line x1="168" y1="268" x2="232" y2="332"/>
+        <line x1="232" y1="268" x2="168" y2="332"/>
+        <animateTransform attributeName="transform" type="rotate" from="0 200 300" to="360 200 300" dur="0.8s" repeatCount="indefinite"/>
+      </g>
+      <g stroke="#999" stroke-width="2">
+        <line x1="360" y1="255" x2="360" y2="345"/>
+        <line x1="315" y1="300" x2="405" y2="300"/>
+        <line x1="328" y1="268" x2="392" y2="332"/>
+        <line x1="392" y1="268" x2="328" y2="332"/>
+        <animateTransform attributeName="transform" type="rotate" from="0 360 300" to="360 360 300" dur="0.8s" repeatCount="indefinite"/>
+      </g>
+      <!-- 脚踏曲柄旋转 -->
+      <g stroke="#333" stroke-width="4">
+        <line x1="300" y1="300" x2="300" y2="330"/>
+        <line x1="300" y1="300" x2="300" y2="270"/>
+        <circle cx="300" cy="330" r="6" fill="#333"/>
+        <circle cx="300" cy="270" r="6" fill="#333"/>
+        <animateTransform attributeName="transform" type="rotate" from="0 300 300" to="360 300 300" dur="0.8s" repeatCount="indefinite"/>
+      </g>
+    </g>
+
+    <!-- 鹈鹕 -->
+    <g>
+      <!-- 身体随骑行轻微上下 -->
+      <animateTransform attributeName="transform" type="translate" values="0 0; 0 -4; 0 0" dur="0.8s" repeatCount="indefinite"/>
+
+      <!-- 尾巴 -->
+      <path d="M225 200 Q205 195 210 215 Z" fill="#f4f4f4" stroke="#ccc" stroke-width="1"/>
+
+      <!-- 身体 -->
+      <ellipse cx="265" cy="195" rx="48" ry="38" fill="#ffffff" stroke="#ddd" stroke-width="2"/>
+
+      <!-- 翅膀（扇动） -->
+      <g>
+        <path d="M260 185 Q300 170 320 195 Q295 205 265 200 Z" fill="#eaeaea" stroke="#ccc" stroke-width="1">
+          <animateTransform attributeName="transform" type="rotate" values="-5 260 185; 10 260 185; -5 260 185" dur="0.8s" repeatCount="indefinite"/>
+        </path>
+      </g>
+
+      <!-- 腿连到脚踏 -->
+      <line x1="280" y1="225" x2="300" y2="300" stroke="#f4a83a" stroke-width="5"/>
+      <line x1="255" y1="225" x2="300" y2="270" stroke="#f4a83a" stroke-width="5"/>
+
+      <!-- 脖子 -->
+      <path d="M295 175 Q320 150 330 120" fill="none" stroke="#ffffff" stroke-width="20" stroke-linecap="round"/>
+
+      <!-- 头 -->
+      <circle cx="335" cy="115" r="22" fill="#ffffff" stroke="#ddd" stroke-width="2"/>
+
+      <!-- 眼睛 -->
+      <circle cx="343" cy="108" r="4" fill="#222"/>
+      <circle cx="344" cy="107" r="1.2" fill="#fff"/>
+
+      <!-- 喙（上喙+喉囊） -->
+      <path d="M352 110 L405 118 L352 126 Z" fill="#f4a83a" stroke="#d9881f" stroke-width="1"/>
+      <path d="M352 126 Q380 150 405 120 Q375 132 352 126 Z" fill="#ffd27a" stroke="#d9881f" stroke-width="1"/>
+
+      <!-- 头顶小帽 -->
+      <path d="M318 96 Q335 84 352 96 Z" fill="#5aa9e6"/>
+    </g>
+  </g>
+</svg>
+</body>
+</html>

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>鹈鹕骑自行车</title>
+<style>
+  body{margin:0;background:#eef2f5;min-height:100vh;display:grid;place-items:center}
+  svg{width:min(96vw,940px);height:auto;border-radius:18px;box-shadow:0 18px 40px rgba(20,30,40,.18)}
+  #headG{transform-box:view-box;transform-origin:406px 134px;animation:sway 3.4s ease-in-out infinite}
+  #pouchG{transform-box:view-box;transform-origin:430px 124px;animation:pouch 1.15s ease-in-out infinite}
+  #eyeG{transform-box:view-box;transform-origin:424px 110px;animation:blink 4.2s linear infinite}
+  #fishG{transform-box:view-box;transform-origin:233px 290px;animation:fishwiggle 1.4s ease-in-out infinite}
+  .speed{stroke:#8fb4cf;stroke-width:5;stroke-linecap:round;opacity:.2;animation:whoosh .75s linear infinite}
+  @keyframes sway{0%,100%{transform:rotate(2.2deg)}50%{transform:rotate(-2.2deg)}}
+  @keyframes pouch{0%,100%{transform:translate(0,0) scaleY(1)}50%{transform:translate(0,2.5px) scaleY(1.02)}}
+  @keyframes blink{0%,93%,100%{transform:scaleY(1)}95.5%{transform:scaleY(.08)}}
+  @keyframes fishwiggle{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
+  @keyframes whoosh{0%{opacity:.08;transform:translateX(10px)}60%{opacity:.5}100%{opacity:.08;transform:translateX(-16px)}}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 900 560" role="img" aria-label="一只鹈鹕在乡间小路上骑自行车">
+  <title>鹈鹕骑自行车</title>
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#9fd8ff"/>
+      <stop offset="1" stop-color="#eaf7ff"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="0" y="0" width="900" height="560" fill="url(#sky)"/>
+  <circle cx="112" cy="86" r="58" fill="#ffe9a8" opacity="0.55"/>
+  <circle cx="112" cy="86" r="36" fill="#ffd94d"/>
+
+  <g id="cloudsG">
+    <g id="cloudTile" fill="#ffffff" opacity="0.95">
+      <ellipse cx="120" cy="88" rx="46" ry="18"/><ellipse cx="152" cy="80" rx="30" ry="15"/><ellipse cx="92" cy="80" rx="24" ry="12"/>
+      <ellipse cx="430" cy="62" rx="52" ry="19"/><ellipse cx="466" cy="54" rx="30" ry="14"/><ellipse cx="398" cy="55" rx="26" ry="12"/>
+      <ellipse cx="780" cy="108" rx="44" ry="17"/><ellipse cx="812" cy="100" rx="28" ry="13"/><ellipse cx="752" cy="101" rx="22" ry="11"/>
+    </g>
+    <use href="#cloudTile" x="1100"/>
+  </g>
+
+  <g id="hillsFarG">
+    <path id="hillFarPath" fill="#b7ddaf"/>
+    <use href="#hillFarPath" x="900"/>
+  </g>
+  <g id="hillsNearG">
+    <path id="hillNearPath" fill="#93cb8e"/>
+    <use href="#hillNearPath" x="900"/>
+  </g>
+
+  <rect x="0" y="441" width="900" height="119" fill="#4b4e57"/>
+  <rect x="0" y="441" width="900" height="4" fill="#61656f"/>
+  <g id="dashes"></g>
+  <g id="shadowG"><ellipse cx="0" cy="0" rx="172" ry="8" fill="#17181c" opacity="0.22"/></g>
+
+  <g>
+    <line class="speed" x1="96" y1="150" x2="158" y2="150"/>
+    <line class="speed" x1="84" y1="204" x2="162" y2="204" style="animation-delay:.22s"/>
+    <line class="speed" x1="106" y1="258" x2="170" y2="258" style="animation-delay:.44s"/>
+  </g>
+
+  <g id="bike">
+    <line id="crankArmFar" x1="360" y1="376" x2="360" y2="376" stroke="#383a41" stroke-width="6" stroke-linecap="round"/>
+    <g id="pedalFar"><rect x="-15" y="-4.5" width="30" height="9" rx="3" fill="#2b2d33"/><rect x="-12" y="-4" width="24" height="2.6" rx="1.3" fill="#ffffff" opacity="0.35"/></g>
+    <g id="legFar">
+      <line id="thighFar" stroke="#cd7c2e" stroke-width="12" stroke-linecap="round"/>
+      <line id="shinFar" stroke="#c46f28" stroke-width="9" stroke-linecap="round"/>
+      <g id="footFar">
+        <path d="M -6 -5 L 12 -7 L 20 -1 L 8 1 L 16 6 L 2 4 L -6 5 Z" fill="#cd7c2e" stroke="#a95f1d" stroke-width="2" stroke-linejoin="round"/>
+        <path d="M0 -3 L13 -5 M0 1 L14 0" stroke="#a95f1d" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      </g>
+    </g>
+
+    <g id="wheelR">
+      <circle cx="240" cy="376" r="60" fill="none" stroke="#2b2b30" stroke-width="9"/>
+      <circle cx="240" cy="376" r="53" fill="none" stroke="#cfd0d8" stroke-width="3"/>
+      <g id="spokesR"></g>
+      <circle cx="240" cy="376" r="7" fill="#8a8a94"/>
+    </g>
+    <g id="wheelF">
+      <circle cx="490" cy="376" r="60" fill="none" stroke="#2b2b30" stroke-width="9"/>
+      <circle cx="490" cy="376" r="53" fill="none" stroke="#cfd0d8" stroke-width="3"/>
+      <g id="spokesF"></g>
+      <circle cx="490" cy="376" r="7" fill="#8a8a94"/>
+    </g>
+
+    <line id="chainTop" x1="240" y1="368.5" x2="360" y2="360" stroke="#45474e" stroke-width="3.5" stroke-dasharray="7 5"/>
+    <line id="chainBottom" x1="240" y1="383.5" x2="360" y2="392" stroke="#45474e" stroke-width="3.5" stroke-dasharray="7 5"/>
+    <circle cx="240" cy="376" r="7.5" fill="none" stroke="#55575e" stroke-width="4"/>
+
+    <g id="frame">
+      <path d="M240 376 L360 376 M240 376 L322 283 M360 376 L322 283 M360 376 L446 272 M322 283 L448 258 M446 272 L452 252 M447 268 Q476 306 490 376" stroke="#e63946" stroke-width="7" fill="none" stroke-linecap="round"/>
+      <path d="M322 283 L317 272" stroke="#6a6d75" stroke-width="5" stroke-linecap="round"/>
+      <rect x="295" y="265" width="42" height="9" rx="4.5" fill="#2f2f33"/>
+      <path d="M452 252 L448 238 Q446 228 458 228 L468 232" stroke="#6a6d75" stroke-width="6" fill="none" stroke-linecap="round"/>
+      <circle cx="469" cy="233" r="5" fill="#2f2f33"/>
+      <circle cx="360" cy="376" r="16" fill="none" stroke="#55575e" stroke-width="5"/>
+      <circle cx="360" cy="376" r="5.5" fill="#55575e"/>
+    </g>
+
+    <g id="crateG">
+      <path d="M204 336 L240 374 M262 336 L240 374 M268 314 L316 280" stroke="#8a8d95" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+      <rect x="196" y="296" width="74" height="40" rx="3" fill="#d9a05b" stroke="#b07c3e" stroke-width="3"/>
+      <path d="M220 300 L220 332 M246 300 L246 332" stroke="#b07c3e" stroke-width="2.5" fill="none"/>
+      <g id="fishG">
+        <path d="M220 289 L205 281 L208 293 Z" fill="#86a9c8" stroke="#5f86a6" stroke-width="1.5" stroke-linejoin="round"/>
+        <ellipse cx="233" cy="290" rx="17" ry="9.5" fill="#86a9c8" stroke="#5f86a6" stroke-width="1.5"/>
+        <circle cx="243" cy="288" r="1.8" fill="#23425c"/>
+      </g>
+    </g>
+
+    <g id="pelican">
+      <path d="M 268 208 L 230 190 L 244 210 L 228 212 L 242 230 L 270 224 Z" fill="#fdfdfd" stroke="#c9ccd4" stroke-width="2.5" stroke-linejoin="round"/>
+      <ellipse cx="318" cy="224" rx="57" ry="41" fill="#fdfdfd" stroke="#c9ccd4" stroke-width="2.5"/>
+      <ellipse cx="310" cy="240" rx="42" ry="24" fill="#e9edf1" opacity="0.75"/>
+      <path d="M 346 194 C 372 182 396 158 408 132" fill="none" stroke="#c9ccd4" stroke-width="33" stroke-linecap="round"/>
+      <path d="M 346 194 C 372 182 396 158 408 132" fill="none" stroke="#fdfdfd" stroke-width="27" stroke-linecap="round"/>
+      <g id="headG">
+        <circle cx="412" cy="120" r="24" fill="#fdfdfd" stroke="#c9ccd4" stroke-width="2.5"/>
+        <g id="pouchG">
+          <path d="M 424 122 C 420 156 440 190 482 192 C 518 193 540 168 544 140 C 522 132 470 124 424 122 Z" fill="#f0913c" stroke="#cf7327" stroke-width="2" stroke-linejoin="round"/>
+        </g>
+        <path d="M 430 108 L 546 134 L 541 142 L 428 120 Z" fill="#f4a259" stroke="#d8823b" stroke-width="1.5" stroke-linejoin="round"/>
+        <path d="M 438 113 L 468 120" stroke="#d8823b" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+        <g id="eyeG">
+          <circle cx="424" cy="109" r="4.5" fill="#23252b"/>
+          <circle cx="425.5" cy="107.5" r="1.6" fill="#ffffff"/>
+        </g>
+      </g>
+      <path d="M 320 200 C 356 190 414 200 452 226 C 462 233 464 240 456 240 C 448 240 420 228 372 224 C 344 222 318 224 314 214 C 311 206 314 202 320 200 Z" fill="#fdfdfd" stroke="#c9ccd4" stroke-width="2.5" stroke-linejoin="round"/>
+      <path d="M 338 206 C 372 202 404 208 430 220 M 336 214 C 366 213 396 218 420 227" stroke="#dde2e8" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    </g>
+
+    <line id="thighNear" stroke="#f6a04a" stroke-width="14" stroke-linecap="round"/>
+    <line id="shinNear" stroke="#ef8f36" stroke-width="10" stroke-linecap="round"/>
+    <line id="crankArmNear" x1="360" y1="376" x2="360" y2="376" stroke="#494b52" stroke-width="7" stroke-linecap="round"/>
+    <g id="pedalNear"><rect x="-15" y="-4.5" width="30" height="9" rx="3" fill="#3b3d45"/><rect x="-12" y="-4" width="24" height="2.6" rx="1.3" fill="#ffffff" opacity="0.35"/></g>
+    <g id="footNear">
+      <path d="M -6 -5 L 12 -7 L 20 -1 L 8 1 L 16 6 L 2 4 L -6 5 Z" fill="#f6a04a" stroke="#d1762b" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M0 -3 L13 -5 M0 1 L14 0" stroke="#d1762b" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    </g>
+  </g>
+</svg>
+
+<script>
+(function(){
+  var $ = function(id){ return document.getElementById(id); };
+  var NS = 'http://www.w3.org/2000/svg';
+  var SPEED = 255, WHEEL_R = 63.5, CRANK_R = 34, L1 = 84, L2 = 90;
+  var BBX = 360, BBY = 376;
+
+  function buildSpokes(id, cx, cy){
+    var g = $(id);
+    for(var i = 0; i < 10; i++){
+      var a = i * Math.PI / 5;
+      var l = document.createElementNS(NS, 'line');
+      l.setAttribute('x1', cx);
+      l.setAttribute('y1', cy);
+      l.setAttribute('x2', (cx + 52 * Math.cos(a)).toFixed(1));
+      l.setAttribute('y2', (cy + 52 * Math.sin(a)).toFixed(1));
+      l.setAttribute('stroke', '#b9bac4');
+      l.setAttribute('stroke-width', '2.2');
+      g.appendChild(l);
+    }
+  }
+  buildSpokes('spokesR', 240, 376);
+  buildSpokes('spokesF', 490, 376);
+
+  function setHill(id, f){
+    var d = 'M0 ' + f(0).toFixed(1);
+    for(var x = 15; x <= 900; x += 15){ d += ' L' + x + ' ' + f(x).toFixed(1); }
+    d += ' L900 470 L0 470 Z';
+    $(id).setAttribute('d', d);
+  }
+  setHill('hillFarPath', function(x){
+    return 420 - 20 * Math.sin(2 * Math.PI * 2 * x / 900 + 1.2) - 9 * Math.sin(2 * Math.PI * 5 * x / 900 + 3.9);
+  });
+  setHill('hillNearPath', function(x){
+    return 438 - 12 * Math.sin(2 * Math.PI * 3 * x / 900 + 0.5) - 6 * Math.sin(2 * Math.PI * 7 * x / 900 + 2.0);
+  });
+
+  var dashes = $('dashes');
+  for(var dx = 0; dx <= 1920; dx += 60){
+    var r = document.createElementNS(NS, 'rect');
+    r.setAttribute('x', dx);
+    r.setAttribute('y', 468);
+    r.setAttribute('width', 34);
+    r.setAttribute('height', 7);
+    r.setAttribute('rx', 3);
+    r.setAttribute('fill', '#f2f3ee');
+    dashes.appendChild(r);
+  }
+
+  function leg(thigh, shin, foot, hx, hy, fx, fy, rot){
+    var dxx = fx - hx, dyy = fy - hy;
+    var d = Math.hypot(dxx, dyy);
+    if(d < 0.001){ dxx = 0.001; d = 0.001; }
+    var dc = Math.min(d, L1 + L2 - 0.4);
+    var a = Math.atan2(dyy, dxx);
+    var c = (L1 * L1 + dc * dc - L2 * L2) / (2 * L1 * dc);
+    c = Math.max(-1, Math.min(1, c));
+    var ka = a - Math.acos(c);
+    var kx = hx + L1 * Math.cos(ka), ky = hy + L1 * Math.sin(ka);
+    thigh.setAttribute('x1', hx); thigh.setAttribute('y1', hy);
+    thigh.setAttribute('x2', kx.toFixed(1)); thigh.setAttribute('y2', ky.toFixed(1));
+    shin.setAttribute('x1', kx.toFixed(1)); shin.setAttribute('y1', ky.toFixed(1));
+    shin.setAttribute('x2', fx.toFixed(1)); shin.setAttribute('y2', fy.toFixed(1));
+    foot.setAttribute('transform', 'translate(' + fx.toFixed(1) + ' ' + fy.toFixed(1) + ') rotate(' + rot.toFixed(1) + ')');
+  }
+
+  var last = performance.now(), dist = 0;
+  function frame(now){
+    var dt = (now - last) / 1000;
+    last = now;
+    if(dt > 0.05) dt = 0.05;
+    var t = now / 1000;
+    dist += SPEED * dt;
+
+    var deg = (dist / WHEEL_R) * 57.29578;
+    $('spokesR').setAttribute('transform', 'rotate(' + deg.toFixed(1) + ' 240 376)');
+    $('spokesF').setAttribute('transform', 'rotate(' + deg.toFixed(1) + ' 490 376)');
+
+    var th = t * 2 * Math.PI * 1.15 - 0.9;
+    var ax = BBX + CRANK_R * Math.cos(th), ay = BBY + CRANK_R * Math.sin(th);
+    var bx = BBX - CRANK_R * Math.cos(th), by = BBY - CRANK_R * Math.sin(th);
+
+    $('crankArmNear').setAttribute('x2', ax.toFixed(1));
+    $('crankArmNear').setAttribute('y2', ay.toFixed(1));
+    $('crankArmFar').setAttribute('x2', bx.toFixed(1));
+    $('crankArmFar').setAttribute('y2', by.toFixed(1));
+    $('pedalNear').setAttribute('transform', 'translate(' + ax.toFixed(1) + ' ' + ay.toFixed(1) + ')');
+    $('pedalFar').setAttribute('transform', 'translate(' + bx.toFixed(1) + ' ' + by.toFixed(1) + ')');
+
+    var bobY = 3 * Math.sin(2 * Math.PI * 1.5 * t);
+    var tilt = 1.8 * Math.sin(2 * Math.PI * 1.5 * t + 0.7);
+    $('pelican').setAttribute('transform', 'translate(0 ' + bobY.toFixed(2) + ') rotate(' + tilt.toFixed(2) + ' 318 224)');
+
+    leg($('thighNear'), $('shinNear'), $('footNear'), 334, 252 + bobY, ax, ay, 6 * Math.cos(th));
+    leg($('thighFar'), $('shinFar'), $('footFar'), 318, 248 + bobY, bx, by, -6 * Math.cos(th));
+
+    $('hillsFarG').setAttribute('transform', 'translate(' + (-((dist * 0.25) % 900)).toFixed(1) + ' 0)');
+    $('hillsNearG').setAttribute('transform', 'translate(' + (-((dist * 0.5) % 900)).toFixed(1) + ' 0)');
+    $('cloudsG').setAttribute('transform', 'translate(' + (-(((dist * 0.12) + t * 8) % 1100)).toFixed(1) + ' 0)');
+    $('dashes').setAttribute('transform', 'translate(' + (-(dist % 60)).toFixed(1) + ' 0)');
+
+    var co = -((dist * 0.9) % 12);
+    $('chainTop').setAttribute('stroke-dashoffset', co.toFixed(1));
+    $('chainBottom').setAttribute('stroke-dashoffset', co.toFixed(1));
+
+    var sx = 1 - 0.05 * Math.sin(2 * Math.PI * 1.5 * t + 0.4);
+    $('shadowG').setAttribute('transform', 'translate(366 452) scale(' + sx.toFixed(3) + ' 1)');
+
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

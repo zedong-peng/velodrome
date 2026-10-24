@@ -12,6 +12,7 @@ routes = [
   # Claude Haiku 5.5 again (its first run wrote no file), and Claude Sonnet 5.5 through Claude Max.
   { harness = "claude-code", provider = "claude-max", model = "claude-sonnet-5-5", effort = "max" },
   { harness = "opencode", provider = "opencode-go", model = "claude-haiku-5-5", effort = "max", attempts = 2 },
+  { harness = "claude-code", provider = "claude-max", model = "claude-haiku-5-5", effort = "max" },
   { harness = "opencode", provider = "opencode-go", model = "beam-free", effort = "max" },
   { harness = "opencode", provider = "opencode-go", model = "deepseek-v4-pro", effort = "max" },
   { harness = "opencode", provider = "opencode-go", model = "gemini-4-argon-contributor", effort = "high" },
@@ -25,6 +26,7 @@ routes = [
   { harness = "opencode", provider = "opencode-go", model = "kimi-k2.7-code", effort = "default" },
   { harness = "opencode", provider = "opencode-go", model = "kimi-k3.1-pro", effort = "max" },
   { harness = "opencode", provider = "opencode-go", model = "longcat-2.0", effort = "default" },
+  { harness = "opencode", provider = "opencode-go", model = "longcat-2.5-preview-free", effort = "default" },
   { harness = "opencode", provider = "opencode-go", model = "mimo-v2.5", effort = "default" },
   { harness = "opencode", provider = "opencode-go", model = "mimo-v2.5-pro", effort = "default" },
   { harness = "opencode", provider = "opencode-go", model = "mimo-v2.6-flash", effort = "default" },

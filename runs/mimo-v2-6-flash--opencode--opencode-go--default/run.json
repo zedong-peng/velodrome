@@ -1,0 +1,40 @@
+{
+  "route": {
+    "harness": "opencode",
+    "provider": "opencode-go",
+    "model": "mimo-v2.6-flash",
+    "effort": "default",
+    "api": "chat"
+  },
+  "attempt": 1,
+  "harness_version": "1.19.4",
+  "harbor_version": "0.24.0",
+  "task_checksum": "c8d5a14595e67070e518bf851e92c6fb736f6b66c17d05d9c6a2be96c91f0e1f",
+  "started_at": "2026-10-23T23:49:51.211366Z",
+  "agent_seconds": 243.5,
+  "steps": 3,
+  "tokens": {
+    "input": 32437,
+    "cache": 15040,
+    "output": 17298
+  },
+  "list_cost_usd": 0.0073,
+  "harness_cost_usd": 0.007321132000000001,
+  "exception": "NonZeroAgentExitCodeError",
+  "verdict": {
+    "file": "pelican-bike.html",
+    "bytes": 20054,
+    "drawn": true,
+    "moving": true,
+    "svgs": 1,
+    "shapes": 184,
+    "motion": [
+      0.0862,
+      0.0541,
+      0.0707
+    ],
+    "errors": 0,
+    "blocked_requests": 0,
+    "render_error": null
+  }
+}
