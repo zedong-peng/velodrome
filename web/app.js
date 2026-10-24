@@ -82,33 +82,16 @@ function secondary(r) {
   return r.harnessName;
 }
 
-// The newest release large, with its receipt; then every earlier model, newest first.
+// One card per model, newest release first.
 function renderLatest() {
-  const [first, ...rest] = MODELS;
-  const r = BY_SLUG.get(first.lead);
-  const facts = [
-    ["Time", fmtTime(r.seconds)], ["Steps", r.steps != null ? String(r.steps) : null],
-    ["Output", r.tokensOut != null ? `${fmtTokens(r.tokensOut)} tokens` : null], ["List cost", fmtCost(r.cost)],
-  ].filter(([, v]) => v);
-  const feature = el("div", { class: "feature" },
-    card(r),
-    el("div", { class: "feature-text" },
-      el("time", { class: "meta", datetime: first.released, text: fmtDate(first.released) }),
-      el("h2", { text: first.name }),
-      el("p", { class: "lede", text: `${first.lab}, in ${r.harnessName} at ${r.effort} effort.` }),
-      facts.length ? el("dl", {}, facts.flatMap(([k, v]) => [el("dt", { text: k }), el("dd", { text: v })])) : null,
-      el("button", { class: "pill", type: "button", text: "Open" }),
-    ));
-  feature.querySelector(".feature-text .pill").addEventListener("click", () => openDetail(r.slug));
   const grid = el("div", { class: "grid lead" });
-  for (const m of rest) {
-    const x = BY_SLUG.get(m.lead);
-    const c = card(x, el("div", { class: "primary", text: m.name }), el("div", { class: "secondary", text: secondary(x) }));
+  for (const m of MODELS) {
+    const r = BY_SLUG.get(m.lead);
+    const c = card(r, el("div", { class: "primary", text: m.name }), el("div", { class: "secondary", text: secondary(r) }));
     c.prepend(el("time", { class: "meta", datetime: m.released, text: fmtDate(m.released) }));
     grid.append(c);
   }
-  $("#latest").append(el("p", { class: "count", text: "Latest release" }), feature,
-    el("p", { class: "count earlier", text: `Earlier · ${rest.length} models` }), grid);
+  $("#latest").append(el("p", { class: "count", text: `${MODELS.length} models` }), grid);
 }
 
 // One row per model with more than one harness: the best run of each, in catalog order.

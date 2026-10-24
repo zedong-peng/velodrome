@@ -102,16 +102,6 @@ h1 b { font-family: var(--sans); font-weight: 700; letter-spacing: -0.015em; }
 
 .count { margin: 0 0 28px; padding-bottom: 16px; border-bottom: 1px solid var(--line); }
 
-.feature { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); gap: 40px; align-items: center; }
-.feature-text h2 { margin: 0 0 10px; font-size: clamp(28px, 3.4vw, 40px); line-height: 1.1; letter-spacing: -0.02em; }
-.feature-text .lede { margin: 0 0 22px; font: 400 19px/1.5 var(--serif); color: var(--ink-2); }
-.feature-text dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 18px; margin: 0 0 24px; padding: 16px 0; border-block: 1px solid var(--line); font-size: 14px; }
-.feature-text dt { color: var(--muted); }
-.feature-text dd { margin: 0; font-variant-numeric: tabular-nums; }
-.feature-text .pill { cursor: pointer; }
-.feature .label { display: none; }
-.count.earlier { margin-top: 64px; }
-
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -303,10 +293,6 @@ aside dd.none { color: var(--faint); }
   .step { top: 34%; }
   .step.next { left: auto; right: 10px; }
   dialog { max-height: calc(100% - 16px); overflow-y: auto; }
-}
-
-@media (max-width: 760px) {
-  .feature { grid-template-columns: 1fr; gap: 20px; }
 }
 
 @media (max-width: 520px) {

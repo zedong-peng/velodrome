@@ -25,7 +25,7 @@ The slug is `<model>--<harness>--<provider>--<effort>`, with `--2`, `--3` for re
 
 Runs before 2026-10-24 were made by hand in each harness, except six measured by a script in OpenCode; their records say less. Later runs come from `velodrome.py run`, with the routes in `routes.toml`.
 
-The site leads with the newest release large, with its receipt, then one run per earlier model, newest first (`released` in `catalog.toml`); the run shown is the highest effort, then an official API over a subscription, then catalog order, chosen without looking at the picture. Models run in several harnesses get a row of their own below, one run per harness. Runs through relays stay in `runs/` but are not shown.
+The site shows one run per model, newest release first (`released` in `catalog.toml`); the run shown is the highest effort, then an official API over a subscription, then catalog order, chosen without looking at the picture. Models run in several harnesses get a row of their own below, one run per harness. Runs through relays stay in `runs/` but are not shown.
 
 ## Render
 
