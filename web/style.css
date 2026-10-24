@@ -189,7 +189,6 @@ h1 b { font-family: var(--sans); font-weight: 700; letter-spacing: -0.015em; }
 
 .routes { padding: 48px 0 16px; border-top: 1px solid var(--line); }
 .routes h2 { margin: 0; font-size: 28px; line-height: 1.2; letter-spacing: -0.015em; }
-.routes .sub { margin: 8px 0 0; max-width: 640px; font: 400 18px/1.5 var(--serif); color: var(--muted); }
 
 .model { padding-top: 36px; }
 .model h3 { margin: 0 0 14px; font-size: 17px; letter-spacing: -0.01em; }
@@ -200,9 +199,7 @@ h1 b { font-family: var(--sans); font-weight: 700; letter-spacing: -0.015em; }
 
 .method { margin-top: 56px; padding: 48px 0 0; border-top: 1px solid var(--line); }
 .method h2 { margin: 0 0 18px; font-size: 28px; line-height: 1.2; letter-spacing: -0.015em; }
-.method ul { margin: 0; padding: 0; max-width: 760px; list-style: none; }
-.method li { padding: 12px 0; border-top: 1px solid var(--line); font: 400 17px/1.55 var(--serif); color: var(--ink-2); }
-.method li:first-child { border-top: 0; padding-top: 0; }
+.method p:not(.fine) { margin: 0; max-width: 720px; font: 400 17px/1.6 var(--serif); color: var(--ink-2); }
 .method .fine { margin-top: 24px; }
 
 .fine { margin: 40px 0 0; padding: 24px 0 0; border-top: 1px solid var(--line); color: var(--muted); font-size: 13.5px; line-height: 1.6; max-width: 720px; }

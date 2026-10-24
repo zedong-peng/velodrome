@@ -9,6 +9,7 @@ Content-Security-Policy and only shown in sandboxed frames; the files in runs/
 stay byte-for-byte what the agents wrote.
 """
 
+import html
 import json
 from pathlib import Path
 import re
@@ -162,6 +163,8 @@ def main():
     payload = {"repo": REPO, "runs": data, "models": models(data, catalog)}
 
     page = (WEB / "index.html").read_text()
+    prompt = (ROOT / "pelican" / "instruction.md").read_text().strip()
+    page = page.replace("<!-- PROMPT -->", html.escape(prompt))
     page = page.replace("/* DATA */", json.dumps(payload, ensure_ascii=False).replace("</", "<\\/"))
     (SITE / "index.html").write_text(page)
     for name in ("app.js", "style.css", "favicon.svg"):

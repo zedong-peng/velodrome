@@ -5,8 +5,9 @@ const RUNS = DATA.runs; // official and subscription runs, sorted by model, harn
 const MODELS = DATA.models; // newest release first, each with the run the page leads with
 const BY_SLUG = new Map(RUNS.map((r) => [r.slug, r]));
 const EFFORT_RANK = ["default", "none", "minimal", "low", "medium", "high", "xhigh", "max"];
-// The main board shows each model's lead run; the agent section shows every other run.
-const OTHER = new Map(MODELS.map((m) => [m.model, RUNS.filter((r) => r.model === m.model && r.slug !== m.lead).map((r) => r.slug)]));
+// The main board shows each model's lead run; the agent section shows every other run of one model.
+const COMPARED = "deepseek-v4.1-flash";
+const OTHER = new Map(MODELS.map((m) => [m.model, m.model === COMPARED ? RUNS.filter((r) => r.model === m.model && r.slug !== m.lead).map((r) => r.slug) : []]));
 // Arrow keys step through the main board, then the agent section's other runs.
 const ORDER = [...MODELS.map((m) => m.lead), ...MODELS.flatMap((m) => OTHER.get(m.model))];
 const ART_W = 960;

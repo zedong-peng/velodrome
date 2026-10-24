@@ -39,21 +39,13 @@
 
   <section id="routes" class="routes">
     <h2>Same model, different agent</h2>
-    <p class="sub">Every other run of these models, in other agents or through other providers. The agent changes the drawing, and sometimes whether there is one: Claude Haiku 5.5 drew in Claude Code and wrote nothing in OpenCode.</p>
     <div id="matrices"></div>
   </section>
 
   <section class="method">
-    <h2>How a run works</h2>
-    <ul>
-      <li>The agent starts in a fresh container with an empty folder and can reach only its model&rsquo;s provider. There is no browser, so it never sees what it draws.</li>
-      <li>It stops on its own, or at 30 minutes.</li>
-      <li>A separate container opens the file offline at 960&times;720. The poster is the frame at 2 seconds; hover or open a card to play the file.</li>
-      <li>Effort is the highest the agent offers for that model, unless the card names another; a model without the setting runs at its default. The provider is the model&rsquo;s official API or a subscription.</li>
-      <li>Cost is at list price; a subscription run costs nothing extra.</li>
-      <li>One attempt is one sample. Run it again and the drawing changes.</li>
-    </ul>
-    <p class="fine">Runs before October 24, 2026 were made by hand or by an earlier script, outside this container, and record less. Every file, its record and the runner are in the <a id="repo-link-2" href="https://github.com/zedong-peng/velodrome">repository</a>. The test is <a href="https://simonwillison.net/tags/pelican-riding-a-bicycle/">Simon Willison&rsquo;s</a>.</p>
+    <h2>Methodology</h2>
+    <p>Each run is one attempt, at the highest effort we could reach, through the model&rsquo;s official API or a subscription. The agent starts in a fresh container with an empty folder and can reach only its provider. It has no browser, so it never sees what it draws. It stops on its own or at 30 minutes, and its file is shown unedited.</p>
+    <p class="fine">Runs before October 24, 2026 were made outside this container. The test is <a href="https://simonwillison.net/tags/pelican-riding-a-bicycle/">Simon Willison&rsquo;s</a>. Every file and the runner are on <a id="repo-link-2" href="https://github.com/zedong-peng/velodrome">GitHub</a>.</p>
   </section>
 </main>
 
