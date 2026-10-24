@@ -9,6 +9,7 @@ Content-Security-Policy and only shown in sandboxed frames; the files in runs/
 stay byte-for-byte what the agents wrote.
 """
 
+import hashlib
 import html
 import json
 from pathlib import Path
@@ -166,6 +167,10 @@ def main():
     prompt = (ROOT / "pelican" / "instruction.md").read_text().strip()
     page = page.replace("<!-- PROMPT -->", html.escape(prompt))
     page = page.replace("/* DATA */", json.dumps(payload, ensure_ascii=False).replace("</", "<\\/"))
+    # A content hash on each asset, so a browser never pairs a fresh page with a cached script.
+    for name, attr in (("app.js", "src"), ("style.css", "href")):
+        tag = hashlib.sha256((WEB / name).read_bytes()).hexdigest()[:8]
+        page = page.replace(f'{attr}="{name}"', f'{attr}="{name}?v={tag}"')
     (SITE / "index.html").write_text(page)
     for name in ("app.js", "style.css", "favicon.svg"):
         shutil.copyfile(WEB / name, SITE / name)
