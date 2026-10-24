@@ -5,10 +5,10 @@ const RUNS = DATA.runs; // official and subscription runs, sorted by model, harn
 const MODELS = DATA.models; // newest release first, each with the run the page leads with
 const BY_SLUG = new Map(RUNS.map((r) => [r.slug, r]));
 const EFFORT_RANK = ["default", "none", "minimal", "low", "medium", "high", "xhigh", "max"];
-// Each model's runs as the grid shows them: its lead run first, then the rest in catalog order.
-const MODEL_RUNS = new Map(MODELS.map((m) => [m.model, [m.lead, ...RUNS.filter((r) => r.model === m.model && r.slug !== m.lead).map((r) => r.slug)]]));
-// Arrow keys step through the main grid.
-const ORDER = MODELS.flatMap((m) => MODEL_RUNS.get(m.model));
+// The main board shows each model's lead run; the agent section shows every other run.
+const OTHER = new Map(MODELS.map((m) => [m.model, RUNS.filter((r) => r.model === m.model && r.slug !== m.lead).map((r) => r.slug)]));
+// Arrow keys step through the main board, then the agent section's other runs.
+const ORDER = [...MODELS.map((m) => m.lead), ...MODELS.flatMap((m) => OTHER.get(m.model))];
 const ART_W = 960;
 
 const $ = (sel) => document.querySelector(sel);
@@ -78,11 +78,7 @@ function card(r, ...label) {
   return node;
 }
 
-// What a card says under the model: the harness, and why there is no drawing when the record knows.
-function secondary(r) {
-  if (!r.drawn && !r.file && r.tokensOut) return `${r.harnessName} · no file after ${fmtTokens(r.tokensOut)} output tokens`;
-  return r.harnessName;
-}
+const noFile = (r) => (!r.drawn && !r.file && r.tokensOut ? `no file after ${fmtTokens(r.tokensOut)} output tokens` : null);
 
 // The harness, plus whatever tells this run apart from the model's other runs in the same harness.
 function label(r) {
@@ -92,33 +88,31 @@ function label(r) {
   if (varies("providerName")) parts.push(r.providerName);
   if (varies("effort")) parts.push(r.effort);
   if (varies("attempt") && r.attempt > 1) parts.push(`attempt ${r.attempt}`);
-  if (!r.drawn && !r.file && r.tokensOut) parts.push(`no file after ${fmtTokens(r.tokensOut)} output tokens`);
-  return parts.join(" · ");
+  return [...parts, noFile(r)].filter(Boolean).join(" · ");
 }
 
-// Every run, newest release first.
+// The main board: one card per model, newest release first.
 function renderLatest() {
   const grid = el("div", { class: "grid lead" });
   for (const m of MODELS) {
-    for (const slug of MODEL_RUNS.get(m.model)) {
-      const r = BY_SLUG.get(slug);
-      const c = card(r, el("div", { class: "primary", text: m.name }), el("div", { class: "secondary", text: label(r) }));
-      c.prepend(el("time", { class: "meta", datetime: m.released, text: fmtDate(m.released) }));
-      grid.append(c);
-    }
+    const r = BY_SLUG.get(m.lead);
+    const c = card(r, el("div", { class: "primary", text: m.name }),
+      el("div", { class: "secondary", text: [r.harnessName, noFile(r)].filter(Boolean).join(" · ") }));
+    c.prepend(el("time", { class: "meta", datetime: m.released, text: fmtDate(m.released) }));
+    grid.append(c);
   }
   const updated = RUNS.map((r) => r.date).filter(Boolean).sort().pop();
-  const count = [`${MODELS.length} models`, `${RUNS.length} runs`, updated ? `updated ${fmtDate(updated)}` : null];
+  const count = [`${MODELS.length} models`, updated ? `updated ${fmtDate(updated)}` : null];
   $("#latest").append(el("p", { class: "count", text: count.filter(Boolean).join(" · ") }), grid);
 }
 
-// One row per model with more than one harness: the best run of each, in catalog order.
+// The agent section: models with runs outside their main setting, every run of each, the main one first.
 function renderHarnesses() {
   const box = $("#matrices");
-  for (const m of MODELS.filter((m) => m.harnesses.length > 1)) {
-    const row = el("div", { class: "grid harness" }, m.harnesses.map((s) => {
+  for (const m of MODELS.filter((m) => OTHER.get(m.model).length)) {
+    const row = el("div", { class: "grid harness" }, [m.lead, ...OTHER.get(m.model)].map((s) => {
       const r = BY_SLUG.get(s);
-      return card(r, el("div", { class: "secondary", text: secondary(r) }));
+      return card(r, el("div", { class: "secondary", text: label(r) }));
     }));
     box.append(el("section", { class: "model" }, el("h3", { text: m.name }), row));
   }
