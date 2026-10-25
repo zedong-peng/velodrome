@@ -3,3 +3,4 @@ jobs/
 site/
 __pycache__/
 runlog*.txt
+CLAUDE.local.md
