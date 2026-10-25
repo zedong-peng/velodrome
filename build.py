@@ -17,13 +17,16 @@ import re
 import shutil
 import sys
 
-from velodrome import load_toml, route_slug
+from velodrome import load_toml, part, route_slug
 
 ROOT = Path(__file__).resolve().parent
 RUNS = ROOT / "runs"
 WEB = ROOT / "web"
 SITE = ROOT / "site"
 REPO = "https://github.com/zedong-peng/velodrome"
+URL = "https://zedongpeng.com/velodrome/"
+TITLE = "Velodrome · a pelican riding a bicycle"
+DESCRIPTION = "How each new model draws a pelican riding a bicycle, at its highest effort, in a coding agent."
 CSP = (
     "default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; "
     "img-src data: blob:; font-src data:; media-src data: blob:"
@@ -129,11 +132,52 @@ def models(data, catalog):
         for r in runs:
             by_harness.setdefault(r["harness"], []).append(r)
         info = catalog["models"][model]
-        entries.append({"model": model, "name": info["name"], "lab": info["lab"], "released": info.get("released"),
+        entries.append({"model": model, "page": part(model), "name": info["name"], "lab": info["lab"], "released": info.get("released"),
                         "lead": best(runs)["slug"], "harnesses": [best(rs)["slug"] for rs in by_harness.values()],
                         "runs": [r["slug"] for r in runs]})
     entries.sort(key=lambda m: (m["released"] or "", m["name"]), reverse=True)
     return entries
+
+
+def fmt_time(s):
+    m, s = divmod(round(s), 60)
+    return f"{m}m {s:02d}s" if m else f"{s}s"
+
+
+def fmt_tokens(n):
+    return f"{n / 1e6:.2f}M" if n >= 1e6 else f"{n / 1e3:.{0 if n >= 1e4 else 1}f}k" if n >= 1e3 else str(n)
+
+
+def summary(r):
+    """A run in one line, for link previews."""
+    if not r["file"]:
+        spent = f" after {fmt_tokens(r['tokensOut'])} output tokens" if r["tokensOut"] else ""
+        return f"{r['modelName']} in {r['harnessName']} wrote no file{spent}."
+    took = [fmt_time(r["seconds"]) if r["seconds"] is not None else None,
+            f"{fmt_tokens(r['tokensOut'])} output tokens" if r["tokensOut"] else None]
+    took = ", ".join(t for t in took if t)
+    return f"A pelican riding a bicycle by {r['modelName']}, in {r['harnessName']}" + (f": {took}." if took else ".")
+
+
+def dress(page, title, description, url, run=None, depth=0):
+    """The page with its own title and link preview. A model's page sits one folder down and opens its lead run."""
+    e = lambda v: html.escape(v, quote=True)
+    tags = [f"<title>{e(title)}</title>",
+            f'<meta name="description" content="{e(description)}">',
+            f'<link rel="canonical" href="{e(url)}">',
+            '<meta property="og:site_name" content="Velodrome">',
+            '<meta property="og:type" content="website">',
+            f'<meta property="og:title" content="{e(title)}">',
+            f'<meta property="og:description" content="{e(description)}">',
+            f'<meta property="og:url" content="{e(url)}">']
+    if run and run["drawn"]:
+        tags += [f'<meta property="og:image" content="{e(URL)}posters/{e(run["slug"])}.jpg">',
+                 '<meta name="twitter:card" content="summary_large_image">']
+    page = page.replace("<!-- META -->", "\n".join(tags))
+    if depth:
+        page = page.replace('<base href="./">', f'<base href="{"../" * depth}">')
+        page = page.replace("<body>", f'<body data-run="{e(run["slug"])}">')
+    return page
 
 
 def main():
@@ -161,7 +205,7 @@ def main():
         data.append(record(run, path.name, catalog))
     data.sort(key=lambda r: r["sort"])
     data = [r for r in data if r["providerKind"] in SHOWN_KINDS]
-    payload = {"repo": REPO, "runs": data, "models": models(data, catalog)}
+    payload = {"repo": REPO, "title": TITLE, "runs": data, "models": models(data, catalog)}
 
     page = (WEB / "index.html").read_text()
     prompt = (ROOT / "pelican" / "instruction.md").read_text().strip()
@@ -171,7 +215,15 @@ def main():
     for name, attr in (("app.js", "src"), ("style.css", "href")):
         tag = hashlib.sha256((WEB / name).read_bytes()).hexdigest()[:8]
         page = page.replace(f'{attr}="{name}"', f'{attr}="{name}?v={tag}"')
-    (SITE / "index.html").write_text(page)
+    # Each model has a page of its own to share: the same gallery, opened on its lead run.
+    by_slug = {r["slug"]: r for r in data}
+    newest = by_slug[payload["models"][0]["lead"]] if payload["models"] else None
+    (SITE / "index.html").write_text(dress(page, TITLE, DESCRIPTION, URL, newest))
+    for m in payload["models"]:
+        lead = by_slug[m["lead"]]
+        (SITE / m["page"]).mkdir()
+        (SITE / m["page"] / "index.html").write_text(
+            dress(page, f"{m['name']} · Velodrome", summary(lead), f"{URL}{m['page']}/", lead, depth=1))
     for name in ("app.js", "style.css", "favicon.svg"):
         shutil.copyfile(WEB / name, SITE / name)
     (SITE / "fonts").mkdir(exist_ok=True)

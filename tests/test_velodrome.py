@@ -120,6 +120,10 @@ class Build(unittest.TestCase):
             self.assertNotIn("/* DATA */", page)
             self.assertIn("Content-Security-Policy", (tmp / "site" / "art" / f"{run.name}.html").read_text())
             self.assertTrue((tmp / "site" / "posters" / f"{run.name}.jpg").exists())
+            share = (tmp / "site" / "kimi-k3" / "index.html").read_text()
+            self.assertIn('<base href="../">', share)
+            self.assertIn(f'<body data-run="{run.name}">', share)
+            self.assertIn(f'content="{build.URL}posters/{run.name}.jpg"', share)
 
     def test_build_rejects_a_mismatched_directory(self):
         with tempfile.TemporaryDirectory() as tmp:

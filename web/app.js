@@ -11,6 +11,11 @@ const OTHER = new Map(MODELS.map((m) => [m.model, m.model === COMPARED ? RUNS.fi
 // Arrow keys step through the main board, then the agent section's other runs.
 const ORDER = [...MODELS.map((m) => m.lead), ...MODELS.flatMap((m) => OTHER.get(m.model))];
 const ART_W = 960;
+// Each model's lead run has a page of its own, its slug as a folder, so the address bar is a link to share.
+// Other runs open from #run=. Every page sets <base> to the site root, which stays put as the address changes.
+const HOME = new URL(".", document.baseURI).href;
+const PAGE = new Map(MODELS.map((m) => [m.lead, `${m.page}/`]));
+const runUrl = (slug) => new URL(PAGE.get(slug) || `#run=${slug}`, HOME).href;
 
 const $ = (sel) => document.querySelector(sel);
 const el = (tag, attrs = {}, ...kids) => {
@@ -39,6 +44,7 @@ const route = (r) => `${r.harnessName} · ${r.providerName} · ${r.effort}`; // 
 // ------------------------------------------------------------------ cards
 
 const canHover = matchMedia("(hover: hover) and (pointer: fine)").matches;
+const canShare = !canHover && !!navigator.share; // phones get the system share sheet, desktops a copy
 
 function liveFrame(slug, box) {
   const frame = el("iframe", { src: `art/${slug}.html`, sandbox: "allow-scripts", tabindex: "-1", title: "Live artwork" });
@@ -123,6 +129,7 @@ function renderHarnesses() {
 
 const dialog = $("#detail");
 let detailFrame = null;
+let current = null;
 
 // Every row is always there, with a dash when the value is unknown, so the
 // sheet keeps its layout while stepping through runs.
@@ -131,9 +138,23 @@ function row(term, ...value) {
   return [el("dt", { text: term }), parts.length ? el("dd", {}, parts) : el("dd", { class: "none", text: "—" })];
 }
 
+function shareButton(r) {
+  const title = `${r.modelName} · Velodrome`, url = runUrl(r.slug), idle = canShare ? "Share" : "Copy link";
+  const b = el("button", { type: "button", text: idle });
+  b.addEventListener("click", () => {
+    if (canShare) return navigator.share({ title, url }).catch(() => {});
+    navigator.clipboard.writeText(url).then(() => {
+      b.textContent = "Copied";
+      setTimeout(() => (b.textContent = idle), 1500);
+    }, () => {});
+  });
+  return b;
+}
+
 function openDetail(slug) {
   const r = BY_SLUG.get(slug);
   if (!r) return;
+  current = slug;
   const released = fmtDate(r.released);
   $("#detail-kicker").textContent = [r.lab, released ? `released ${released}` : null, r.attempt > 1 ? `attempt ${r.attempt}` : null].filter(Boolean).join(" · ");
   $("#detail-title").textContent = r.modelName;
@@ -154,6 +175,7 @@ function openDetail(slug) {
   );
   const blob = `${DATA.repo}/blob/main/runs/${r.slug}`;
   $("#detail-links").replaceChildren(
+    shareButton(r),
     r.file ? el("a", { href: `art/${r.slug}.html`, target: "_blank", rel: "noopener", text: "Full page ↗" }) : null,
     r.file ? el("a", { href: `${blob}/pelican.html`, text: "Source" }) : null,
     el("a", { href: `${blob}/run.json`, text: "Record" }),
@@ -162,20 +184,22 @@ function openDetail(slug) {
   if (detailFrame) detailFrame._ro.disconnect();
   box.replaceChildren((detailFrame = r.file ? liveFrame(r.slug, box) : null) || el("div", { class: "empty", text: "No drawing" }));
   if (!dialog.open) dialog.showModal();
-  history.replaceState(null, "", `#run=${slug}`);
+  history.replaceState(null, "", runUrl(slug));
+  document.title = `${r.modelName} · Velodrome`;
 }
 
 function closeDetail() {
   if (detailFrame) detailFrame._ro.disconnect();
   $("#detail-frame").replaceChildren();
   detailFrame = null;
+  current = null;
   if (dialog.open) dialog.close();
-  history.replaceState(null, "", location.pathname + location.search);
+  history.replaceState(null, "", HOME);
+  document.title = DATA.title;
 }
 
 function step(delta) {
-  const slug = new URLSearchParams(location.hash.slice(1)).get("run");
-  const i = ORDER.indexOf(slug);
+  const i = ORDER.indexOf(current);
   if (i >= 0) openDetail(ORDER[(i + delta + ORDER.length) % ORDER.length]);
 }
 
@@ -199,5 +223,5 @@ document.addEventListener("keydown", (e) => {
 for (const id of ["#repo-link", "#repo-link-2"]) $(id).href = DATA.repo;
 renderLatest();
 renderHarnesses();
-const start = new URLSearchParams(location.hash.slice(1)).get("run");
+const start = new URLSearchParams(location.hash.slice(1)).get("run") || document.body.dataset.run;
 if (start && BY_SLUG.has(start)) openDetail(start);
