@@ -161,6 +161,12 @@ apis = ["google"]
 # any route are costed on one scale. `released` is models.dev's release date; the
 # site lists the newest model first.
 
+[models.claude-fable-5-2]
+name = "Claude Fable 5.2"
+lab = "Anthropic"
+released = "2026-11-09"
+price = { input = 8, output = 40, cache_read = 0.2 }
+
 [models.claude-opus-5-5]
 name = "Claude Opus 5.5"
 lab = "Anthropic"
