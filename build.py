@@ -25,7 +25,7 @@ WEB = ROOT / "web"
 SITE = ROOT / "site"
 REPO = "https://github.com/zedong-peng/velodrome"
 URL = "https://zedongpeng.com/velodrome/"
-TITLE = "Velodrome · a pelican riding a bicycle"
+TITLE = "Velodrome · a pelican riding a bicycle in one prompt"
 DESCRIPTION = "How each new model draws a pelican riding a bicycle, at its highest effort, in a coding agent."
 CSP = (
     "default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; "
