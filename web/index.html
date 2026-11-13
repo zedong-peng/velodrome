@@ -6,28 +6,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- META -->
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
-<link rel="preload" href="fonts/sourceserif4.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://zedongpeng.com/assets/css/site.css">
 <link rel="stylesheet" href="style.css">
-<script>
-  // Follow the theme chosen on zedongpeng.com, else the system.
-  (() => {
-    const t = localStorage.getItem("theme");
-    if (t === "dark" || t === "light") document.documentElement.dataset.theme = t;
-  })();
-</script>
 </head>
 <body>
-<header class="top">
-  <a class="mark" href="./" aria-label="Velodrome home">
-    <svg viewBox="0 0 56 32" aria-hidden="true"><rect x="2" y="2" width="52" height="28" rx="14" class="edge"/><rect x="8" y="8" width="40" height="16" rx="8" class="sprint"/><rect x="13" y="13" width="30" height="6" rx="3" class="stay"/></svg>
-    <span>Velodrome</span>
-  </a>
-  <nav><a id="repo-link" class="pill" href="https://github.com/zedong-peng/velodrome">GitHub</a></nav>
-</header>
+<script src="https://zedongpeng.com/assets/js/site-header.js"></script>
 
 <main>
   <section class="intro">
-    <h1><b>A velodrome</b> is a cycling track. Here the riders are pelicans.</h1>
+    <p class="eyebrow">Benchmark · <a id="repo-link" href="https://github.com/zedong-peng/velodrome">GitHub</a></p>
+    <h1>Velodrome</h1>
+    <p class="lead">A velodrome is a cycling track. Here the riders are pelicans.</p>
     <div class="prompt">
       <p class="tag">Prompt</p>
       <p lang="zh"><!-- PROMPT --></p>
@@ -49,9 +41,7 @@
   </section>
 </main>
 
-<footer>
-  <span>Velodrome by <a href="https://zedongpeng.com/">Zedong Peng</a></span>
-</footer>
+<footer class="zp-foot small">&copy; 2026 Zedong Peng</footer>
 
 <dialog id="detail" aria-labelledby="detail-title">
   <div class="sheet">

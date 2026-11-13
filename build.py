@@ -226,9 +226,6 @@ def main():
             dress(page, f"{m['name']} · Velodrome", summary(lead), f"{URL}{m['page']}/", lead, depth=1))
     for name in ("app.js", "style.css", "favicon.svg"):
         shutil.copyfile(WEB / name, SITE / name)
-    (SITE / "fonts").mkdir(exist_ok=True)
-    for font in (WEB / "fonts").glob("*.woff2"):
-        shutil.copyfile(font, SITE / "fonts" / font.name)
     print(f"Built {len(data)} runs into {SITE.relative_to(ROOT)}/")
 
 
