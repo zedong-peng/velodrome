@@ -43,6 +43,12 @@ default_api = "chat"
 "qwen3.8-flash" = "anthropic"
 "gemini-4-argon-contributor" = "google"
 
+[providers.antigravity]
+name = "Google Antigravity"
+kind = "subscription"
+# The user's Antigravity sign-in on their Mac (11-19); runs by hand in agy there.
+harnesses = ["antigravity"]
+
 [providers.cursor]
 name = "Cursor"
 kind = "subscription"
@@ -90,6 +96,8 @@ openai = "https://anyrouter.top/v1"
 [providers.zlab]
 name = "zlab"
 kind = "relay"
+# The user's way to OpenAI's models (11-19): its runs show on the site.
+shown = true
 anthropic = "https://ttft.asia"
 openai = "https://ttft.asia/v1"
 
@@ -111,6 +119,10 @@ apis = ["anthropic", "responses", "chat", "google"]
 [harnesses.pi]
 name = "Pi"
 apis = ["anthropic", "responses", "chat"]
+
+[harnesses.antigravity]
+name = "Antigravity CLI"
+apis = []  # runs by hand in agy on the user's Mac; Harbor's agent takes only an API key
 
 [harnesses.cursor]
 name = "Cursor"
@@ -197,6 +209,18 @@ lab = "Anthropic"
 released = "2026-10-07"
 price = { input = 0.1, output = 0.5, cache_read = 0.01 }
 
+[models."gpt-6.2-astra"]
+name = "GPT-6.2 Astra"
+lab = "OpenAI"
+released = "2026-11-17"
+price = { input = 8, output = 40, cache_read = 0.4 }
+
+[models."gpt-6.2-sol"]
+name = "GPT-6.2 Sol"
+lab = "OpenAI"
+released = "2026-11-17"
+price = { input = 2, output = 10, cache_read = 0.1 }
+
 [models.gpt-6-astra]
 name = "GPT-6 Astra"
 lab = "OpenAI"
@@ -226,6 +250,18 @@ name = "GPT-5.6 Luna"
 lab = "OpenAI"
 released = "2026-07-09"
 price = { input = 0.2, output = 1.2 }
+
+[models.gemini-4-neon]
+name = "Gemini 4 Neon"
+lab = "Google"
+released = "2026-11-18"
+price = { input = 3, output = 15, cache_read = 0.15 }
+
+[models.gemini-4-hydrogen]
+name = "Gemini 4 Hydrogen"
+lab = "Google"
+released = "2026-11-12"
+price = { input = 1.5, output = 7.5, cache_read = 0.075 }
 
 [models.gemini-4-argon-contributor]
 name = "Gemini 4 Argon"

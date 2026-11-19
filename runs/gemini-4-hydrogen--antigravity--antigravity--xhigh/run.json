@@ -1,0 +1,41 @@
+{
+  "route": {
+    "harness": "antigravity",
+    "provider": "antigravity",
+    "model": "gemini-4-hydrogen",
+    "effort": "xhigh",
+    "api": "google"
+  },
+  "attempt": 1,
+  "harness_version": "1.5.12",
+  "harbor_version": null,
+  "task_checksum": null,
+  "started_at": "2026-11-19T08:48:36Z",
+  "agent_seconds": 342.2,
+  "steps": 4,
+  "tokens": {
+    "input": 72608,
+    "cache": 0,
+    "output": 55263
+  },
+  "list_cost_usd": 0.5234,
+  "harness_cost_usd": null,
+  "exception": null,
+  "note": "Run by hand in agy on the user's Mac (Antigravity sign-in), outside Harbor; output tokens include thinking.",
+  "verdict": {
+    "file": "pelican.html",
+    "bytes": 70614,
+    "drawn": true,
+    "moving": true,
+    "svgs": 1,
+    "shapes": 329,
+    "motion": [
+      0.063,
+      0.0667,
+      0.0738
+    ],
+    "errors": 0,
+    "blocked_requests": 0,
+    "render_error": null
+  }
+}

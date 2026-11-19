@@ -34,7 +34,8 @@ CSP = (
 EFFORTS = ["none", "minimal", "low", "medium", "high", "xhigh", "max", "default"]
 # The page leads with each model at its highest effort; "default" ranks lowest, since it names no level.
 EFFORT_RANK = {e: i for i, e in enumerate(["default"] + EFFORTS[:-1])}
-# Relays resell access to other labs' models; the page shows only official APIs and subscriptions.
+# Relays resell access to other labs' models; the page shows only official APIs and subscriptions,
+# and a relay the catalog marks `shown` (zlab, the user's only way to OpenAI's models).
 SHOWN_KINDS = ("official", "subscription")
 
 
@@ -89,6 +90,7 @@ def record(run, slug, catalog):
         "provider": route["provider"],
         "providerName": provider["name"],
         "providerKind": provider["kind"],
+        "shown": provider["kind"] in SHOWN_KINDS or bool(provider.get("shown")),
         "effort": route["effort"],
         "attempt": run.get("attempt", 1),
         # One sort key for the page: model, harness, provider, effort, attempt.
@@ -122,7 +124,7 @@ def models(data, catalog):
     run's detail.
     """
     kinds = {k: i for i, k in enumerate(SHOWN_KINDS)}
-    best = lambda runs: min(runs, key=lambda r: (-EFFORT_RANK.get(r["effort"], -1), kinds[r["providerKind"]], r["sort"][1:]))
+    best = lambda runs: min(runs, key=lambda r: (-EFFORT_RANK.get(r["effort"], -1), kinds.get(r["providerKind"], len(kinds)), r["sort"][1:]))
     out = {}
     for r in data:
         out.setdefault(r["model"], []).append(r)
@@ -204,7 +206,7 @@ def main():
             shutil.copyfile(path / "poster.jpg", SITE / "posters" / f"{path.name}.jpg")
         data.append(record(run, path.name, catalog))
     data.sort(key=lambda r: r["sort"])
-    data = [r for r in data if r["providerKind"] in SHOWN_KINDS]
+    data = [r for r in data if r["shown"]]
     payload = {"repo": REPO, "title": TITLE, "runs": data, "models": models(data, catalog)}
 
     page = (WEB / "index.html").read_text()

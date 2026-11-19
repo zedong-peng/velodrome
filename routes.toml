@@ -8,6 +8,10 @@
 #   { harness = "pi", provider = "rightapi", model = "claude-opus-5-5" },
 
 routes = [
+  # 2026-11-19: GPT-6.2 Astra and Sol (released 11-17) in Codex through zlab, the key the user's own
+  # Codex uses; no ChatGPT subscription and not on OpenCode Go. The user asked for them on the site.
+  { harness = "codex", provider = "zlab", model = "gpt-6.2-astra", effort = "max" },
+  { harness = "codex", provider = "zlab", model = "gpt-6.2-sol", effort = "max" },
   # 2026-11-10: Claude Fable 5.2 (released 11-09) in Claude Code through Claude Max. At max it thought
   # for 23 min, hit the 128k output cap with no file, then the 5-hour limit; the user chose high.
   { harness = "claude-code", provider = "claude-max", model = "claude-fable-5-2", effort = "high" },

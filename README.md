@@ -23,9 +23,9 @@ Each run is one attempt: the file the agent wrote, unedited. Every run is mine; 
 
 The slug is `<model>--<harness>--<provider>--<effort>`, with `--2`, `--3` for repeats. `run.json` holds the route, the render verdict (`drawn`, `moving`, file size, console errors) and, when the run was measured, time, tokens and list-price cost.
 
-Runs before 2026-10-24 were made by hand in each harness, except six measured by a script in OpenCode; their records say less. Later runs come from `velodrome.py run`, with the routes in `routes.toml`.
+Runs before 2026-10-24 were made by hand in each harness, except six measured by a script in OpenCode; their records say less. Later runs come from `velodrome.py run`, with the routes in `routes.toml`. The exception is Google's models: they run by hand in the Antigravity CLI (`agy`) through an Antigravity subscription, because Harbor's agent for it takes only an API key. Each runs in an empty folder, with the stream-json log kept for its time, steps and tokens, and `velodrome.py render` draws the poster.
 
-The site shows one run per model, newest release first (`released` in `catalog.toml`): the highest effort, then an official API over a subscription, then catalog order, chosen without looking at the picture. Every other run of DeepSeek V4.1 Flash (other harnesses or providers) is in the section below, its card naming what sets it apart. Each route keeps one attempt, at the highest effort we could reach. Runs through relays stay in `runs/` but are not shown.
+The site shows one run per model, newest release first (`released` in `catalog.toml`): the highest effort, then an official API over a subscription, then catalog order, chosen without looking at the picture. Every other run of DeepSeek V4.1 Flash (other harnesses or providers) is in the section below, its card naming what sets it apart. Each route keeps one attempt, at the highest effort we could reach. Runs through relays stay in `runs/` but are not shown, except zlab's, our only way to OpenAI's models (`shown = true` in `catalog.toml`).
 
 ## Render
 
